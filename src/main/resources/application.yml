@@ -1,0 +1,23 @@
+spring:
+  # MongoDB config
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: test
+      username: rootTest
+      password: goodjob123
+  # Mysql config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=GMT%2b8
+    username: root
+    password: goodjob123
+
+# Mybatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+# 服务器配置
+server:
+  port: 9090

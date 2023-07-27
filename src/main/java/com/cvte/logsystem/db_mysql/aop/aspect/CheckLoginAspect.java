@@ -1,0 +1,56 @@
+package com.cvte.logsystem.db_mysql.aop.aspect;
+
+import com.cvte.logsystem.db_mysql.exception.AuthException;
+import com.cvte.logsystem.db_mysql.utils.JwtUtils;
+import com.cvte.logsystem.db_mysql.response.ResultCode;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.Arrays;
+
+/**
+ * @Description TODO
+ * @Classname CheckLoginAspect
+ * @Date 2023/7/21 10:28 AM
+ * @Created by liushenghao
+ */
+
+@Aspect
+@Component
+@Slf4j
+public class CheckLoginAspect {
+    @Pointcut("execution(@com.cvte.logsystem.db_mysql.aop.annotation.CheckLogin * *(..))")
+    public void methodPointCut() {
+    }
+
+    @Before("methodPointCut()")
+    public void loginCheck() {
+        try {
+            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+            ServletRequestAttributes attributes = (ServletRequestAttributes) requestAttributes;
+            HttpServletRequest request = attributes.getRequest();
+            Cookie[] cookies = request.getCookies();
+            String token = null;
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("token")){
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+            Boolean valid = JwtUtils.verifyToken(token);
+            if (!valid) {
+                throw new AuthException(ResultCode.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            throw new AuthException(ResultCode.UNAUTHORIZED);
+        }
+    }
+}
