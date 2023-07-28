@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cvte.logsystem.db_mysql.mapper.AppInfoMapper">
+    <!-- 添加新应用信息 -->
+    <insert id="addAppInfo">
+        insert into app(appid,appName) values (#{appid},#{appName})
+    </insert>
+
+    <!-- 查询appid是否存在 -->
+    <select id="checkExist">
+        select count(*) from app
+        <where>
+            appid = #{appid};
+        </where>
+    </select>
+
+    <!-- 添加待上传日志用户及对应应用 -->
+    <insert id="addUploadData">
+        insert into upload(appid,userid) values (#{appid},#{userid})
+    </insert>
+</mapper>

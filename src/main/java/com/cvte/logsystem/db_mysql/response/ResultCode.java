@@ -7,7 +7,10 @@ public enum ResultCode {
     MISSING_PARAM("A0102", "缺少参数"),
     UNSUPPORTED_METHOD("A0103", "不支持的请求类型"),
     SYSTEM_ERROR("A0104", "系统错误"),
-    ACCOUNT_EXIST("A0105", "账号已存在");
+    APPID_CREATE_FAILED("A0105","创建appid失败"),
+    ACCOUNT_EXIST("A0106", "账号已存在"),
+    VALIDATION_FAILED("A0107","参数校验失败"),
+    APPID_NOT_EXIST("A0108","appid不存在");
 
     private String code;
     private String msg;

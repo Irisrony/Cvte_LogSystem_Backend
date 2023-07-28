@@ -17,15 +17,15 @@ public class UserService{
     private UserMapper userMapper;
 
     // 管理员登陆
-    public Map<String, String> login(User user) {
-        Map<String, String> res = new HashMap<>();
+    public String login(User user) {
+        String token = null;
         if (user != null) {
             User u = userMapper.findByName(user.getUsername());
             if (u != null && BCrypt.checkpw(user.getPassword(), u.getPassword())) {
-                res.put("token", getToken(u));
+                token = getToken(u);
             }
         }
-        return res;
+        return token;
     }
 
     // 管理员注册

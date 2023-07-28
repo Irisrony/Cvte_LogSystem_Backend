@@ -1,5 +1,6 @@
 package com.cvte.logsystem.db_mysql.controller;
 
+import com.cvte.logsystem.db_mysql.exception.AppInfoException;
 import com.cvte.logsystem.db_mysql.exception.AuthException;
 import com.cvte.logsystem.db_mysql.exception.LoginException;
 import com.cvte.logsystem.db_mysql.response.BasicResponse;
@@ -26,10 +27,10 @@ public class ControllerExceptionAdvice extends BasicResponse {
      * @param e
      * @return
      */
-    @ExceptionHandler({MethodArgumentNotValidException.class, LoginException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     protected Object methodArgNotValid(Exception e) {
         log.error(e.getMessage());
-        return responseFail(ResultCode.USER_LOGIN_ERROR);
+        return responseFail(ResultCode.VALIDATION_FAILED);
     }
 
     /**
@@ -77,7 +78,29 @@ public class ControllerExceptionAdvice extends BasicResponse {
     @ExceptionHandler(AuthException.class)
     protected Object authException(AuthException e) {
         log.error(e.toString());
-        return responseFail(ResultCode.UNAUTHORIZED);
+        return responseFail(e.getCode(),e.getMsg());
+    }
+
+    /**
+     * appid生成失败
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(AppInfoException.class)
+    protected Object appInfoException(AppInfoException e){
+        log.error(e.toString());
+        return responseFail(e.getCode(),e.getMsg());
+    }
+
+    /**
+     * 登陆失败
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(LoginException.class)
+    protected Object loginException(LoginException e){
+        log.error(e.toString());
+        return responseFail(e.getCode(),e.getMsg());
     }
 
     /**

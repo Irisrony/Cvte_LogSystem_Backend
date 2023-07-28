@@ -8,5 +8,6 @@ public interface UserMapper {
     // 根据用户名查找
     User findByName(String username);
 
+    // 添加管理员
     int addUser(User user);
 }

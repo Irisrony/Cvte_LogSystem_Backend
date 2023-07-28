@@ -1,11 +1,13 @@
 package com.cvte.logsystem.db_mysql.aop.aspect;
 
 import com.cvte.logsystem.db_mysql.exception.AuthException;
+import com.cvte.logsystem.db_mysql.utils.CookieUtils;
 import com.cvte.logsystem.db_mysql.utils.JwtUtils;
 import com.cvte.logsystem.db_mysql.response.ResultCode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -37,16 +39,9 @@ public class CheckLoginAspect {
             RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
             ServletRequestAttributes attributes = (ServletRequestAttributes) requestAttributes;
             HttpServletRequest request = attributes.getRequest();
-            Cookie[] cookies = request.getCookies();
-            String token = null;
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")){
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-            Boolean valid = JwtUtils.verifyToken(token);
-            if (!valid) {
+            Cookie cookie = CookieUtils.get(request,"token");
+            String token = cookie == null ? null : cookie.getValue();
+            if(token == null || !JwtUtils.verifyToken(token)){
                 throw new AuthException(ResultCode.UNAUTHORIZED);
             }
         } catch (Exception e) {

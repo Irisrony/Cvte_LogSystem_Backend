@@ -5,13 +5,11 @@ import com.cvte.logsystem.db_mysql.exception.LoginException;
 import com.cvte.logsystem.db_mysql.service.UserService;
 import com.cvte.logsystem.db_mysql.domain.User;
 import com.cvte.logsystem.db_mysql.response.ResultCode;
-import jakarta.servlet.http.Cookie;
+import com.cvte.logsystem.db_mysql.utils.CookieUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,28 +20,48 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 管理员登陆
+     * @param user
+     * @param response
+     * @return
+     */
     @PostMapping("/login")
-    public Map<String,String> login(@Valid @RequestBody User user) {
-        Map<String, String> res = userService.login(user);
-        if (!res.containsKey("token")) {
+    public Map<String,String> login(@Valid @RequestBody User user, HttpServletResponse response) {
+        String token = userService.login(user);
+        if (token == null) {
             throw new LoginException(ResultCode.USER_LOGIN_ERROR);
         }
-        ServletRequestAttributes attributes = (ServletRequestAttributes)(RequestContextHolder.getRequestAttributes());
-        HttpServletResponse response = attributes.getResponse();
-        response.addCookie(new Cookie("token",res.get("token")));
+        CookieUtils.set(response,"token",token,24*60*60,true);
         return new HashMap<>();
     }
 
+    /**
+     * 管理员登出
+     * @param response
+     * @return
+     */
+    @PostMapping("/logout")
+    public Map<String,String> logout(HttpServletResponse response) {
+        CookieUtils.set(response,"token","",0,true);
+        return new HashMap<>();
+    }
+
+    /**
+     * 测试
+     * @param param
+     * @return
+     */
     @GetMapping("/test")
     @CheckLogin
-    public String test(@RequestParam(required = true) String param) {
+    public String test(@RequestParam(required = false) String param) {
         return param;
     }
 
     //注册
-    @PostMapping("/registry")
-    public String register(@Valid @RequestBody User user) {
-        return userService.register(user);
-    }
+    //@PostMapping("/registry")
+    //public String register(@Valid @RequestBody User user) {
+    //    return userService.register(user);
+    //}
 
 }

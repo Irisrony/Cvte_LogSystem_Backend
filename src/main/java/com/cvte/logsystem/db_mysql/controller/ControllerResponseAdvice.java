@@ -11,6 +11,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import java.util.HashMap;
+
 @RestControllerAdvice
 public class ControllerResponseAdvice extends BasicResponse implements ResponseBodyAdvice {
 
@@ -30,6 +32,6 @@ public class ControllerResponseAdvice extends BasicResponse implements ResponseB
                 throw new RuntimeException(e);
             }
         }
-        return responseSuccess(body);
+        return responseSuccess(body == null ? new HashMap<>() : body);
     }
 }
