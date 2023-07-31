@@ -11,7 +11,7 @@
     <select id="checkExist">
         select count(*) from app
         <where>
-            appid = #{appid};
+            appid = #{appid}
         </where>
     </select>
 
@@ -19,4 +19,9 @@
     <insert id="addUploadData">
         insert into upload(appid,userid) values (#{appid},#{userid})
     </insert>
+
+    <!--  获取所有AppInfo  -->
+    <select id="getAllAppInfo">
+        select * from app
+    </select>
 </mapper>

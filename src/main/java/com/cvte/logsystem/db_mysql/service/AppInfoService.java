@@ -6,9 +6,15 @@ import com.cvte.logsystem.db_mysql.exception.AppInfoException;
 import com.cvte.logsystem.db_mysql.mapper.AppInfoMapper;
 import com.cvte.logsystem.db_mysql.response.ResultCode;
 import com.cvte.logsystem.db_mysql.utils.AppUtils;
+import com.cvte.logsystem.db_mysql.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Description TODO
@@ -21,6 +27,8 @@ import org.springframework.stereotype.Service;
 public class AppInfoService {
     @Autowired
     private AppInfoMapper appInfoMapper;
+    @Autowired
+    private RedisUtils redisUtils;
 
     // 生成新应用id并更新到数据库
     public String addAppInfo(String appName){
@@ -44,5 +52,21 @@ public class AppInfoService {
             log.error("Add " + uploadEntity + " to database failed!");
         }
         return true;
+    }
+
+    // 获取所有appid信息
+    public List<AppInfo> getAllAppInfo(){
+        return appInfoMapper.getAllAppInfo();
+    }
+
+    // 获取appid与对应的userid列表
+    public List<AppInfo> getIdSet(){
+        List<AppInfo> list = getAllAppInfo();
+        for (AppInfo appInfo : list) {
+            String appid = appInfo.getAppid();
+            Set<Object> userid = redisUtils.getZSet(appid,0,-1);
+            appInfo.setUserid(userid);
+        }
+        return list;
     }
 }

@@ -1,5 +1,6 @@
 package com.cvte.logsystem.db_mysql.controller;
 
+import com.cvte.logsystem.db_mysql.aop.annotation.VerifyToken;
 import com.cvte.logsystem.db_mysql.domain.AppInfo;
 import com.cvte.logsystem.db_mysql.domain.UploadEntity;
 import com.cvte.logsystem.db_mysql.service.AppInfoService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +33,7 @@ public class AppInfoController {
      * @return
      */
     @PostMapping("/getAppid")
+    @VerifyToken
     public Map<String,String> addAppInfo(@Valid @RequestBody AppInfo appInfo){
         String appid = appInfoService.addAppInfo(appInfo.getAppName());
         Map<String,String> res = new HashMap<>();
@@ -51,4 +54,12 @@ public class AppInfoController {
         return res;
     }
 
+    @GetMapping("/idSet")
+    @VerifyToken
+    public Map<String, List<AppInfo>> getIdSet(){
+        List<AppInfo> list = appInfoService.getIdSet();
+        Map<String, List<AppInfo>> map = new HashMap<>();
+        map.put("idArray",list);
+        return map;
+    }
 }

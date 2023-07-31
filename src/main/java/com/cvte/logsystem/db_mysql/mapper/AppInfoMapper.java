@@ -4,6 +4,8 @@ import com.cvte.logsystem.db_mysql.domain.AppInfo;
 import com.cvte.logsystem.db_mysql.domain.UploadEntity;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * @Description TODO
  * @Classname AppInfoMapper
@@ -15,4 +17,5 @@ public interface AppInfoMapper {
     public int addAppInfo(AppInfo appInfo);
     public int checkExist(String appid);
     public int addUploadData(UploadEntity uploadEntity);
+    public List<AppInfo> getAllAppInfo();
 }

@@ -1,6 +1,6 @@
 package com.cvte.logsystem.db_mysql.controller;
 
-import com.cvte.logsystem.db_mysql.aop.annotation.CheckLogin;
+import com.cvte.logsystem.db_mysql.aop.annotation.VerifyToken;
 import com.cvte.logsystem.db_mysql.exception.LoginException;
 import com.cvte.logsystem.db_mysql.service.UserService;
 import com.cvte.logsystem.db_mysql.domain.User;
@@ -53,7 +53,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/test")
-    @CheckLogin
+    @VerifyToken
     public String test(@RequestParam(required = false) String param) {
         return param;
     }

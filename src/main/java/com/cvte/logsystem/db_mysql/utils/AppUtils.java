@@ -1,5 +1,7 @@
 package com.cvte.logsystem.db_mysql.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -11,6 +13,7 @@ import java.util.UUID;
  * @Date 2023/7/27 4:09 PM
  * @Created by liushenghao
  */
+@Component
 public class AppUtils {
     // 映射表
     private final static String[] chars = {"a", "b", "c", "d", "e", "f",
