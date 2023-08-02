@@ -23,7 +23,7 @@ public class AppInfo {
     @NotBlank
     @Length(min = 4,max = 50)
     private String appName;
-    private Set<Object> userid;
+    private Object userid;
     public AppInfo(String appid,String appName){
         this.appid = appid;
         this.appName = appName;

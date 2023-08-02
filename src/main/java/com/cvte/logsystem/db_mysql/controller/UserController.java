@@ -1,6 +1,5 @@
 package com.cvte.logsystem.db_mysql.controller;
 
-import com.cvte.logsystem.db_mysql.aop.annotation.VerifyToken;
 import com.cvte.logsystem.db_mysql.exception.LoginException;
 import com.cvte.logsystem.db_mysql.service.UserService;
 import com.cvte.logsystem.db_mysql.domain.User;
@@ -46,22 +45,5 @@ public class UserController {
         CookieUtils.set(response,"token","",0,true);
         return new HashMap<>();
     }
-
-    /**
-     * 测试
-     * @param param
-     * @return
-     */
-    @GetMapping("/test")
-    @VerifyToken
-    public String test(@RequestParam(required = false) String param) {
-        return param;
-    }
-
-    //注册
-    //@PostMapping("/registry")
-    //public String register(@Valid @RequestBody User user) {
-    //    return userService.register(user);
-    //}
 
 }

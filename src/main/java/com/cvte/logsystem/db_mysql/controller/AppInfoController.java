@@ -47,6 +47,7 @@ public class AppInfoController {
      * @return
      */
     @PostMapping("/report")
+    @VerifyToken
     public Map<String,Boolean> addUploadData(@Valid @RequestBody UploadEntity uploadEntity){
         Boolean flag = appInfoService.addUploadData(uploadEntity);
         Map<String,Boolean> res = new HashMap<>();
