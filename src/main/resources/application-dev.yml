@@ -1,0 +1,33 @@
+# Mybatis 配置
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+
+# 服务器配置
+server:
+  port: 9092
+
+spring:
+  data:
+    # MongoDB config
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: test
+      username: rootTest
+      password: goodjob123
+    # Redis config
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      lettuce:
+        pool:
+          max-idle: 16
+          max-active: 32
+          min-idle: 8
+  # Mysql config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/test?serverTimezone=GMT%2b8
+    username: root
+    password: goodjob123
