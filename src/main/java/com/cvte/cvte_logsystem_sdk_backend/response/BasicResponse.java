@@ -1,6 +1,7 @@
 package com.cvte.cvte_logsystem_sdk_backend.response;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description TODO
@@ -9,6 +10,12 @@ import java.util.HashMap;
  * @Created by liushenghao
  */
 public abstract class BasicResponse {
+    private final Map<String,Boolean> fail = new HashMap<>();
+
+    public BasicResponse(){
+        fail.put("status",false);
+    }
+
     /**
      * 默认成功返回
      *
@@ -19,7 +26,13 @@ public abstract class BasicResponse {
         ResultVo res = new ResultVo();
         res.setCode(ResultCode.SUCCESS.getCode());
         res.setMsg(ResultCode.SUCCESS.getMsg());
-        res.setData(data == null ? new HashMap<>() : data);
+        if (data == null){
+            Map<String,Boolean> mp = new HashMap<>();
+            mp.put("status",true);
+            res.setData(mp);
+        }else{
+            res.setData(data);
+        }
         return res;
     }
 
@@ -33,7 +46,7 @@ public abstract class BasicResponse {
         ResultVo res = new ResultVo();
         res.setCode(code.getCode());
         res.setMsg(code.getMsg());
-        res.setData(new HashMap<>());
+        res.setData(fail);
         return res;
     }
 
@@ -48,7 +61,7 @@ public abstract class BasicResponse {
         ResultVo res = new ResultVo();
         res.setCode(code.getCode());
         res.setMsg(msg == null ? code.getMsg() : msg);
-        res.setData(new HashMap<>());
+        res.setData(fail);
         return res;
     }
 
@@ -56,7 +69,7 @@ public abstract class BasicResponse {
         ResultVo res = new ResultVo();
         res.setCode(code);
         res.setMsg(msg);
-        res.setData(new HashMap<>());
+        res.setData(fail);
         return res;
     }
 }

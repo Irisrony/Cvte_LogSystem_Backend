@@ -1,8 +1,10 @@
 package com.cvte.cvte_logsystem_sdk_backend.db_mongo.repository;
 
-import javax.print.attribute.standard.JobKOctets;
+import org.springframework.data.mongodb.core.query.Query;
+
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Description TODO
@@ -11,25 +13,52 @@ import java.util.Map;
  * @Created by liushenghao
  */
 public interface BasicMongoRepository {
+    // =========== 获取全部集合名称 =============
+    default Set<String> getCollectionNames(){
+        return null;
+    }
+
+    default Boolean hasCollectionName(String appid){return null;};
+
     // =========== 条件查询 =============
 
-    default List<Object> queryFind(String key, String value, Class className) {
+    default List<Object> findAllByField(String key, String value, Class className) {
         return null;
     }
 
-    default List<Object> queryFind(String key, String value, Class className, String collectionName) {
+    default List<Object> findAllByField(String key, String value, Class className, String collectionName) {
         return null;
     }
 
-    default Object queryFindOne(String key, String value, Class className) {
+    default Object findOneByField(String key, String value, Class className) {
         return null;
     }
 
-    default Object queryFindOne(String key, String value, Class className, String collectionName) {
+    default Object findOneByField(String key, String value, Class className, String collectionName) {
         return null;
     }
 
-    // =========== 查询所有 =============
+    // =========== 综合查询 =============
+
+    default List<Object> findAllByPage(int pageNum,int pageSize,String key,String value,String regexTag,String content,Class className,String collectionName){
+        return null;
+    }
+
+    // =========== Sql查询 =============
+
+    default Object findOneByQuery(Query query,Class className,String collectionName){
+        return null;
+    }
+
+    default List<Object> findAllByQuery(Query query, Class className){
+        return null;
+    }
+
+    default List<Object> findAllByQuery(Query query,Class className,String collectionName){
+        return null;
+    }
+
+    // =========== 查询所有数据 =============
 
     default List<Object> findAll(Class className) {
         return null;
@@ -41,11 +70,16 @@ public interface BasicMongoRepository {
 
     // ============ 分页查询 ============
 
+    default List<Object> findByPage(int pageNum, int pageSize, Class className) {
+        return null;
+    }
+
+
     default List<Object> findByPage(int pageNum, int pageSize, Class className, String sortTag) {
         return null;
     }
 
-    default List<Object> findByPage(int pageNum, int pageSize, Class className, String collectionName, String sortTag) {
+    default List<Object> findByPage(int pageNum, int pageSize, Class className, String sortTag, String collectionName) {
         return null;
     }
 
@@ -71,13 +105,17 @@ public interface BasicMongoRepository {
 
     }
 
-    default void singleUpsert(String key, String value, String updateKey, Object updateValue, Class className,String collectionName) {
+    default void singleUpsert(String key, String value, String updateKey, Object updateValue, Class className, String collectionName) {
 
     }
 
     // =========== 数据删除 ==============
 
     default void singleRemove(String key, String value, Class className) {
+
+    }
+
+    default void singleRemove(String key, String value, Class className, String collectionName) {
 
     }
 }

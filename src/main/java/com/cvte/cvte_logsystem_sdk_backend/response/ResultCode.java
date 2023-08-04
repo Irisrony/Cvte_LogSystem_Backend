@@ -8,15 +8,12 @@ package com.cvte.cvte_logsystem_sdk_backend.response;
  */
 public enum ResultCode {
     SUCCESS("00000", "成功"),
-    USER_LOGIN_ERROR("A0100", "用户名或密码错误"),
-    UNAUTHORIZED("A0101", "token非法"),
-    MISSING_PARAM("A0102", "缺少参数"),
-    UNSUPPORTED_METHOD("A0103", "不支持的请求类型"),
-    SYSTEM_ERROR("A0104", "系统错误"),
-    APPID_CREATE_FAILED("A0105","创建appid失败"),
-    ACCOUNT_EXIST("A0106", "账号已存在"),
-    VALIDATION_FAILED("A0107","参数校验失败"),
-    APPID_NOT_EXIST("A0108","appid不存在");
+    MISSING_PARAM("A0100", "缺少参数"),
+    UNSUPPORTED_METHOD("A0101", "不支持的请求类型"),
+    SYSTEM_ERROR("A0102", "系统错误"),
+    VALIDATION_FAILED("A0103","参数校验失败"),
+    APPID_NOT_EXIST("A0104","appid不存在"),
+    UNAUTHORIZED("A0105","用户无需上传");
 
     private String code;
     private String msg;

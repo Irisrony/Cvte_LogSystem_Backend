@@ -1,7 +1,9 @@
 package com.cvte.cvte_logsystem_sdk_backend.db_redis.service;
 
 import com.cvte.cvte_logsystem_sdk_backend.db_redis.domain.UserInfo;
+import com.cvte.cvte_logsystem_sdk_backend.db_redis.exception.UserInfoException;
 import com.cvte.cvte_logsystem_sdk_backend.db_redis.repositoryImpl.RedisRepositoryImpl;
+import com.cvte.cvte_logsystem_sdk_backend.response.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,17 @@ public class UserInfoService {
     @Autowired
     private RedisRepositoryImpl redisRepository;
 
-    public boolean isExist(UserInfo userInfo){
+    /**
+     * 检查用户是否需要上传日志
+     * @param userInfo
+     * @return
+     */
+    public Boolean isExist(UserInfo userInfo){
+        // 先清除过期的KV
         redisRepository.removeZSetValueByScore(userInfo.getAppid(),Long.MIN_VALUE,new Date().getTime() - 24*60*60*3);
-        return redisRepository.zsetHasKey(userInfo.getAppid(), userInfo.getUserid());
+        if (!redisRepository.zsetHasKey(userInfo.getAppid(), userInfo.getUserid())){
+            throw new UserInfoException(ResultCode.UNAUTHORIZED);
+        }
+        return true;
     }
 }
