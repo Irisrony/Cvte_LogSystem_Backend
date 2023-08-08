@@ -1,7 +1,7 @@
 package com.cvte.logsystem.db_mysql.mapper;
 
-import com.cvte.logsystem.db_mysql.domain.AppInfo;
-import com.cvte.logsystem.db_mysql.domain.UploadEntity;
+import com.cvte.logsystem.domain.AppInfo;
+import com.cvte.logsystem.domain.UploadEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

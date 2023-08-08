@@ -1,6 +1,6 @@
 package com.cvte.logsystem.db_mysql.mapper;
 
-import com.cvte.logsystem.db_mysql.domain.User;
+import com.cvte.logsystem.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

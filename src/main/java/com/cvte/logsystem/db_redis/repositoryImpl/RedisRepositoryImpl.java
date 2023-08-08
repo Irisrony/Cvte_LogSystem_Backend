@@ -244,98 +244,98 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     // =================  Key-Set  ==================
 
-    ///**
-    // * 获取Set集合中的所有值
-    // * @param key
-    // * @return
-    // */
-    //public Set<Object> getSet(String key){
-    //    try{
-    //        return redisTemplate.opsForSet().members(key);
-    //    }catch (Exception e){
-    //        log.error(e.getMessage());
-    //        return null;
-    //    }
-    //}
-    //
-    ///**
-    // * 检查Set中是否存在该值
-    // * @param key
-    // * @param value
-    // * @return
-    // */
-    //public boolean setHasKey(String key,Object value){
-    //    try{
-    //        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(key, value));
-    //    }catch (Exception e){
-    //        log.error(e.getMessage());
-    //        return false;
-    //    }
-    //}
-    //
-    ///**
-    // * 将数据放入Set中
-    // * @param key
-    // * @param values
-    // * @return 成功个数
-    // */
-    //public long setSetValue(String key,Object... values){
-    //    try{
-    //        return redisTemplate.opsForSet().add(key,values);
-    //    }catch (Exception e){
-    //        log.error(e.getMessage());
-    //        return 0;
-    //    }
-    //}
-    //
-    ///**
-    // * 添加数据到Set中并设置过期时间
-    // * @param key
-    // * @param time
-    // * @param values
-    // * @return
-    // */
-    //public long setSetValue(String key,long time,Object... values){
-    //    try{
-    //        Long cnt = redisTemplate.opsForSet().add(key,values);
-    //        if(time > 0){
-    //            setKeyExpire(key,time);
-    //        }
-    //        return cnt;
-    //    }catch (Exception e){
-    //        log.error(e.getMessage());
-    //        return 0;
-    //    }
-    //}
-    //
-    ///**
-    // * 获取Set大小
-    // * @param key
-    // * @return
-    // */
-    //public long getSetSize(String key){
-    //    try{
-    //        return redisTemplate.opsForSet().size(key);
-    //    }catch (Exception e){
-    //        log.error(e.getMessage());
-    //        return 0;
-    //    }
-    //}
-    //
-    ///**
-    // * 从Set中移除values
-    // * @param key
-    // * @param values
-    // * @return
-    // */
-    //public long removeSetValue(String key,Object... values){
-    //    try{
-    //        return redisTemplate.opsForSet().remove(key,values);
-    //    }catch (Exception e){
-    //        log.error(e.getMessage());
-    //        return 0;
-    //    }
-    //}
+    /**
+     * 获取Set集合中的所有值
+     * @param key   Set名称
+     * @return  Set
+     */
+    public Set<Object> getSet(String key){
+        try{
+            return redisTemplate.opsForSet().members(key);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 检查Set中是否存在该值
+     * @param key   Set名称
+     * @param value 数据
+     * @return
+     */
+    public boolean setHasKey(String key,Object value){
+        try{
+            return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(key, value));
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 将数据放入Set中
+     * @param key   Set名称
+     * @param values    数据
+     * @return 成功个数
+     */
+    public long setSetValue(String key,Object... values){
+        try{
+            return redisTemplate.opsForSet().add(key,values);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * 添加数据到Set中并设置过期时间
+     * @param key   Set名称
+     * @param time  过期时间
+     * @param values    数据
+     * @return
+     */
+    public long setSetValue(String key,long time,Object... values){
+        try{
+            Long cnt = redisTemplate.opsForSet().add(key,values);
+            if(time > 0){
+                setKeyExpire(key,time);
+            }
+            return cnt == null ? 0 : cnt;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * 获取Set大小
+     * @param key   Set名称
+     * @return  Set大小
+     */
+    public long getSetSize(String key){
+        try{
+            return redisTemplate.opsForSet().size(key);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * 从Set中移除values
+     * @param key   Set名称
+     * @param values    待删除数据
+     * @return
+     */
+    public long removeSetValue(String key,Object... values){
+        try{
+            return redisTemplate.opsForSet().remove(key,values);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return 0;
+        }
+    }
 
     // =================  Key-List  ==================
 
@@ -529,6 +529,22 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
     public boolean setZSetValue(String key,Object value,long score){
         try{
             return redisTemplate.opsForZSet().addIfAbsent(key,value,score);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 一次性添加多条数据
+     * @param key
+     * @param values
+     * @return
+     */
+    public boolean setZSetValues(String key,Set values){
+        try{
+            Long cnt = redisTemplate.opsForZSet().add(key,values);
+            return cnt != null && cnt == values.size();
         }catch (Exception e){
             log.error(e.getMessage());
             return false;
