@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -76,6 +77,11 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
         mongoTemplate.save(obj,collectionName);
     }
 
+    /**
+     * 批量插入数据
+     * @param list
+     * @param collectionName
+     */
     @Override
     public void insert(List<LogInfo> list,String collectionName){
         mongoTemplate.insert(list,collectionName);
@@ -108,15 +114,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
      */
     @Override
     public List<LogInfo> findAllByField(String key, String value, Class className){
-        Query query = Query.query(Criteria.where(key).is(value));
-
-        //Set<String> set = getCollectionNames();
-        //if(set != null){
-        //    set.forEach(s -> {
-        //        res.addAll(mongoTemplate.find(query,className,s));
-        //    });
-        //}
-
+        Query query = Query.query(Criteria.where(key).is(value)).with(Sort.by(Sort.Order.desc("timestamp")));
         List<Object> res = new ArrayList<>(mongoTemplate.find(query, className, "allLogs"));
         return res.stream().filter(Objects::nonNull).map(s -> (LogInfo) s).toList();
     }
@@ -160,12 +158,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
      */
     @Override
     public List<LogInfo> findAllByQuery(Query query,Class className){
-        //Set<String> set = getCollectionNames();
-        //if(set != null){
-        //    set.forEach(s -> {
-        //        res.addAll(mongoTemplate.find(query,className,s));
-        //    });
-        //}
+
         List<Object> res = new ArrayList<>(mongoTemplate.find(query, className, "allLogs"));
         return res.stream().filter(Objects::nonNull).map(s -> (LogInfo)s).toList();
     }
@@ -191,13 +184,6 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     @Override
     public List<LogInfo> findAll(Class className){
 
-        //Set<String> set = getCollectionNames();
-        //if(set != null){
-        //    set.forEach(s -> {
-        //        res.addAll(mongoTemplate.findAll(className,s));
-        //    });
-        //}
-
         List<Object> res = new ArrayList<>(mongoTemplate.findAll(className, ALL_LOGS));
         return res.stream().filter(Objects::nonNull).map(s -> (LogInfo)s).collect(Collectors.toList());
     }
@@ -211,8 +197,9 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
      * @param collectionName
      * @return
      */
+    @Override
     public List<LogInfo> findOneField(String field,Class className,String collectionName){
-        Query query = new Query();
+        Query query = new Query().with(Sort.by(Sort.Order.desc("timestamp")));
         query.fields().include(field);
         return mongoTemplate.find(query,className,collectionName);
     }
@@ -223,6 +210,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
      * @param className
      * @return
      */
+    @Override
     public List<LogInfo> findOneField(String field,Class className){
         Query query = new Query();
         query.fields().include(field);
@@ -242,7 +230,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     @Override
     public List<LogInfo> findByPage(int pageNum,int pageSize,Class className,String collectionName){
         Pageable pageable = PageRequest.of(pageNum-1,pageSize);
-        Query query = new Query().with(pageable);
+        Query query = new Query().with(pageable).with(Sort.by(Sort.Order.desc("timestamp")));
         return mongoTemplate.find(query,className,collectionName);
     }
 
@@ -262,7 +250,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
      */
     @Override
     public List<LogInfo> findAllByPage(int pageNum,int pageSize,String key,String value,String regexTag,String content,Class className,String collectionName){
-        Query query = new Query();
+        Query query = new Query().with(Sort.by(Sort.Order.desc("timestamp")));
 
         // userid
         if(Strings.isNotBlank(key) && Strings.isNotBlank(value)){
@@ -274,13 +262,37 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
             query.addCriteria(Criteria.where(regexTag).regex(pattern));
         }
         // 集合名(appid)
-        if (Strings.isNotBlank(collectionName)){
+        if (Strings.isBlank(collectionName)){
             collectionName = ALL_LOGS;
 
         }
         query.with(PageRequest.of(pageNum-1,pageSize));
         return findAllByQuery(query,className,collectionName);
         //return findAllByQuery(query,className).stream().skip((long) (pageNum - 1) * pageSize).limit(pageSize).toList();
+    }
+
+    // =========== 查询集合大小 ==========
+
+    /**
+     * 查询集合大小
+     * @param collectionName    集合名
+     * @return  集合大小
+     */
+    public Long getCollectionSize(String userid,String regex,String collectionName){
+        Query query = new Query();
+        // userid 非空,按userid查找
+        if(Strings.isNotBlank(userid)){
+            query.addCriteria(Criteria.where("userid").is(userid));
+        }
+        // appid 为空,全局查找
+        if (Strings.isBlank(collectionName)){
+            collectionName = ALL_LOGS;
+        }
+        if (Strings.isNotBlank(regex)){
+            Pattern pattern = Pattern.compile("^.*" + regex + ".*$",Pattern.CASE_INSENSITIVE);
+            query.addCriteria(Criteria.where("msg").regex(pattern));
+        }
+        return mongoTemplate.count(query,collectionName);
     }
 
     // =========== 数据删除 ==============

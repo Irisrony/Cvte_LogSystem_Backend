@@ -1,5 +1,6 @@
 package com.cvte.logsystem_sdk.db_mongo.repository;
 
+import com.cvte.logsystem_sdk.domain.LogInfo;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
@@ -78,6 +79,10 @@ public interface BasicMongoRepository<T> {
         return null;
     }
 
+
+    List<LogInfo> findOneField(String field, Class className, String collectionName);
+
+    List<LogInfo> findOneField(String field, Class className);
 
     default List<T> findByPage(int pageNum, int pageSize, Class className, String sortTag) {
         return null;
