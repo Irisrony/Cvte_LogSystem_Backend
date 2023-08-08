@@ -27,12 +27,16 @@ public class LogInfoController {
 
     @GetMapping("/sendLog")
     @VerifyToken
-    public Map<String, List<LogInfo>> sendLog(
+    public Map<String, Object> sendLog(
             @RequestParam Integer pageNum, @RequestParam Integer pageSize, @RequestParam(required = false) String appid,
             @RequestParam(required = false) String userid,@RequestParam(required = false) String content){
+
         List<LogInfo> logs = logInfoService.sendLog(pageNum,pageSize,appid,userid,content);
-        Map<String,List<LogInfo>> res = new HashMap<>();
+        Long total = logInfoService.getTotal(userid,content,appid);
+
+        Map<String,Object> res = new HashMap<>();
         res.put("logs",logs);
+        res.put("total",total);
         return res;
     }
 }

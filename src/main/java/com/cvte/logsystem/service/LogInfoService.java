@@ -24,20 +24,25 @@ public class LogInfoService {
     @Autowired
     private MongoRepositoryImpl mongoRepository;
 
-    @Autowired
-    private RedisRepositoryImpl redisRepository;
+    /**
+     * 获取当前日志总数
+     * @param collectionName
+     * @return
+     */
+    public Long getTotal(String userid,String regex,String collectionName){
+        return mongoRepository.getCollectionSize(userid,regex,collectionName);
+    }
 
+    /**
+     * 获取日志信息
+     * @param pageNum
+     * @param pageSize
+     * @param appid
+     * @param userid
+     * @param content
+     * @return
+     */
     public List<LogInfo> sendLog(Integer pageNum,Integer pageSize,String appid,String userid,String content){
-        if (Strings.isBlank(appid) && Strings.isBlank(userid)){
-            redisRepository.removeZSetValueByScore("uploaded", Long.MIN_VALUE,new Date().getTime() - 24*60*60*3);
-            Set<String> set = redisRepository.getZSet("uploaded", (long) (pageNum - 1) *pageSize, (long) pageNum *pageSize).stream().map(s -> (String) s).collect(Collectors.toSet());
-            List<LogInfo> list = new ArrayList<>();
-            for (String s : set) {
-                String[] info = s.split("_");
-                list.add(mongoRepository.findById(info[1], LogInfo.class,info[0]));
-            }
-            return list;
-        }
-        return mongoRepository.findAllByPage(pageNum,pageSize,"userid",userid,null,content,LogInfo.class,appid);
+        return mongoRepository.findAllByPage(pageNum,pageSize,"userid",userid,"msg",content,LogInfo.class,appid);
     }
 }

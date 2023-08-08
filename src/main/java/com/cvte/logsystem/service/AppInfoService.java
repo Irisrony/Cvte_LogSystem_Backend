@@ -69,12 +69,18 @@ public class AppInfoService {
         return true;
     }
 
-    // 获取所有appid信息
+    /**
+     * 获取所有appid信息
+     * @return
+     */
     public List<AppInfo> getAllAppInfo(){
         return appInfoMapper.getAllAppInfo();
     }
 
-    // 获取appid与对应的userid列表
+    /**
+     * 获取appid与对应的userid列表
+     * @return
+     */
     public List<AppInfo> getIdSet(){
         List<AppInfo> list = getAllAppInfo();
         for (AppInfo appInfo : list) {
@@ -83,12 +89,6 @@ public class AppInfoService {
             appInfo.setUserid(userList.stream().map(LogInfo::getUserid).collect(Collectors.toSet()));
         }
         return list;
-    }
-
-    // 获取所有日志总数
-    public Long getTotal(){
-        redisRepository.removeZSetValueByScore("uploaded",Long.MIN_VALUE,new Date().getTime()-24*60*60*3);
-        return redisRepository.getZSetSize("uploaded");
     }
 
 }

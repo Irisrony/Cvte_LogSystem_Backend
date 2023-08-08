@@ -63,10 +63,8 @@ public class AppInfoController {
     @VerifyToken
     public Map<String, Object> getIdSet(){
         List<AppInfo> list = appInfoService.getIdSet();
-        Long total = appInfoService.getTotal();
         Map<String, Object> map = new HashMap<>();
         map.put("idArray",list);
-        map.put("total",total);
         return map;
     }
 }
