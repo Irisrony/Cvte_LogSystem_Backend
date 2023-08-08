@@ -25,6 +25,11 @@ public class LogInfoController {
     @Autowired
     private LogInfoService logInfoService;
 
+    /**
+     * 日志上传
+     * @param parseMap
+     * @return
+     */
     @PostMapping("/logUpload")
     @VerifyArgs
     public Map<String,Boolean> logUpload(@RequestBody JSONObject parseMap){
@@ -37,6 +42,7 @@ public class LogInfoController {
         list.forEach(s -> infos.add(JSON.parseObject(JSON.toJSONString(s),Info.class)));
 
         boolean status = logInfoService.saveOrUpsert(appid,userid,infos);
+
         Map<String,Boolean> res = new HashMap<>();
         res.put("status",status);
         return res;

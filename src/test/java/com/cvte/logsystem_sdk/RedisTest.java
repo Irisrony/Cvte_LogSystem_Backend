@@ -18,7 +18,7 @@ class RedisTest {
     @Autowired
     private RedisRepositoryImpl redisRepository;
     @Autowired
-    private MongoRepositoryImpl<LogInfo> mongoRepository;
+    private MongoRepositoryImpl mongoRepository;
 
     @Test
     void zsetTest() {
@@ -80,7 +80,7 @@ class RedisTest {
     @Test
     void mongoFindOneTest1(){
         //LogInfo logInfo = (LogInfo) mongoRepository.findOneByField("userid","123", LogInfo.class,"12345678");
-        LogInfo logInfo = (LogInfo) mongoRepository.findOneByField("userid","94", LogInfo.class,"48");
+        LogInfo logInfo = mongoRepository.findOneByField("userid","94", LogInfo.class,"48");
         Info info = logInfo.getInfo();
         System.out.println(info);
         System.out.println(logInfo);

@@ -24,6 +24,11 @@ public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
+    /**
+     * 检查用户是否需要上传
+     * @param userInfo
+     * @return
+     */
     @PostMapping("/isExist")
     public Map<String,Boolean> isExist(@Valid @RequestBody UserInfo userInfo){
         Map<String,Boolean> res = new HashMap<>();

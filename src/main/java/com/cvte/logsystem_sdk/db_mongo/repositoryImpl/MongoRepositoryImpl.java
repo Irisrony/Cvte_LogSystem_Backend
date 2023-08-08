@@ -29,9 +29,11 @@ import java.util.stream.Collectors;
  */
 @Repository
 @Slf4j
-public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
+public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    private final static String ALL_LOGS = "allLogs";
 
     // =========== 获取全部集合名称 =============
 
@@ -70,12 +72,12 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @param collectionName
      */
     @Override
-    public void save(T obj,String collectionName){
+    public void save(LogInfo obj,String collectionName){
         mongoTemplate.save(obj,collectionName);
     }
 
     @Override
-    public void insert(List<T> list,String collectionName){
+    public void insert(List<LogInfo> list,String collectionName){
         mongoTemplate.insert(list,collectionName);
     }
 
@@ -92,9 +94,9 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  Entity
      */
     @Override
-    public T findOneByField(String key,String value,Class className,String collectionName){
+    public LogInfo findOneByField(String key, String value, Class className, String collectionName){
         Query query = Query.query(Criteria.where(key).is(value));
-        return (T) mongoTemplate.findOne(query,className,collectionName);
+        return (LogInfo) mongoTemplate.findOne(query,className,collectionName);
     }
 
     /**
@@ -105,21 +107,23 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  该id在所有集合中的数据集合
      */
     @Override
-    public List<T> findAllByField(String key, String value, Class className){
+    public List<LogInfo> findAllByField(String key, String value, Class className){
         Query query = Query.query(Criteria.where(key).is(value));
-        List<Object> res = new ArrayList<>();
-        Set<String> set = getCollectionNames();
-        if(set != null){
-            set.forEach(s -> {
-                res.addAll(mongoTemplate.find(query,className,s));
-            });
-        }
-        return res.stream().filter(Objects::nonNull).map(s -> (T) s).toList();
+
+        //Set<String> set = getCollectionNames();
+        //if(set != null){
+        //    set.forEach(s -> {
+        //        res.addAll(mongoTemplate.find(query,className,s));
+        //    });
+        //}
+
+        List<Object> res = new ArrayList<>(mongoTemplate.find(query, className, "allLogs"));
+        return res.stream().filter(Objects::nonNull).map(s -> (LogInfo) s).toList();
     }
 
     @Override
-    public T findById(Object id,Class className,String collectionName){
-        return (T) mongoTemplate.findById(id,className,collectionName);
+    public LogInfo findById(Object id,Class className,String collectionName){
+        return (LogInfo) mongoTemplate.findById(id,className,collectionName);
     }
 
     // 2. Sql查询
@@ -132,8 +136,8 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  单个集合中符合条件的单个对象
      */
     @Override
-    public T findOneByQuery(Query query,Class className,String collectionName){
-        return (T) mongoTemplate.findOne(query,className,collectionName);
+    public LogInfo findOneByQuery(Query query,Class className,String collectionName){
+        return (LogInfo) mongoTemplate.findOne(query,className,collectionName);
     }
 
     /**
@@ -144,7 +148,7 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  单个集合中所有满足条件的对象的集合
      */
     @Override
-    public List<T> findAllByQuery(Query query,Class className,String collectionName){
+    public List<LogInfo> findAllByQuery(Query query,Class className,String collectionName){
         return mongoTemplate.find(query,className,collectionName);
     }
 
@@ -155,15 +159,15 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  所有集合中满足条件的所有对象的集合
      */
     @Override
-    public List<T> findAllByQuery(Query query,Class className){
-        Set<String> set = getCollectionNames();
-        List<Object> res = new ArrayList<>();
-        if(set != null){
-            set.forEach(s -> {
-                res.addAll(mongoTemplate.find(query,className,s));
-            });
-        }
-        return res.stream().filter(Objects::nonNull).map(s -> (T)s).toList();
+    public List<LogInfo> findAllByQuery(Query query,Class className){
+        //Set<String> set = getCollectionNames();
+        //if(set != null){
+        //    set.forEach(s -> {
+        //        res.addAll(mongoTemplate.find(query,className,s));
+        //    });
+        //}
+        List<Object> res = new ArrayList<>(mongoTemplate.find(query, className, "allLogs"));
+        return res.stream().filter(Objects::nonNull).map(s -> (LogInfo)s).toList();
     }
 
     // 3. 查询全部数据
@@ -175,7 +179,7 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  该集合的所有数据的集合
      */
     @Override
-    public List<T> findAll(Class className,String collectionName){
+    public List<LogInfo> findAll(Class className,String collectionName){
         return mongoTemplate.findAll(className,collectionName);
     }
 
@@ -185,23 +189,44 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  所有数据的集合
      */
     @Override
-    public List<T> findAll(Class className){
-        Set<String> set = getCollectionNames();
-        List<Object> res = new ArrayList<>();
-        if(set != null){
-            set.forEach(s -> {
-                res.addAll(mongoTemplate.findAll(className,s));
-            });
-        }
-        return res.stream().filter(Objects::nonNull).map(s -> (T)s).collect(Collectors.toList());
+    public List<LogInfo> findAll(Class className){
+
+        //Set<String> set = getCollectionNames();
+        //if(set != null){
+        //    set.forEach(s -> {
+        //        res.addAll(mongoTemplate.findAll(className,s));
+        //    });
+        //}
+
+        List<Object> res = new ArrayList<>(mongoTemplate.findAll(className, ALL_LOGS));
+        return res.stream().filter(Objects::nonNull).map(s -> (LogInfo)s).collect(Collectors.toList());
     }
 
     // 4. 单字段查询
 
-    public List<T> findOneField(String field,Class className,String collectionName){
+    /**
+     * 在单个集合中查找单个字段
+     * @param field
+     * @param className
+     * @param collectionName
+     * @return
+     */
+    public List<LogInfo> findOneField(String field,Class className,String collectionName){
         Query query = new Query();
         query.fields().include(field);
         return mongoTemplate.find(query,className,collectionName);
+    }
+
+    /**
+     * 在所有集合中查找单个字段
+     * @param field
+     * @param className
+     * @return
+     */
+    public List<LogInfo> findOneField(String field,Class className){
+        Query query = new Query();
+        query.fields().include(field);
+        return mongoTemplate.find(query,className,ALL_LOGS);
     }
 
     // 5. 分页查询
@@ -215,7 +240,7 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  分页查询出的对象的集合
      */
     @Override
-    public List<T> findByPage(int pageNum,int pageSize,Class className,String collectionName){
+    public List<LogInfo> findByPage(int pageNum,int pageSize,Class className,String collectionName){
         Pageable pageable = PageRequest.of(pageNum-1,pageSize);
         Query query = new Query().with(pageable);
         return mongoTemplate.find(query,className,collectionName);
@@ -236,8 +261,9 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
      * @return  所有满足查询条件的对象的集合
      */
     @Override
-    public List<T> findAllByPage(int pageNum,int pageSize,String key,String value,String regexTag,String content,Class className,String collectionName){
+    public List<LogInfo> findAllByPage(int pageNum,int pageSize,String key,String value,String regexTag,String content,Class className,String collectionName){
         Query query = new Query();
+
         // userid
         if(Strings.isNotBlank(key) && Strings.isNotBlank(value)){
             query.addCriteria(Criteria.where(key).is(value));
@@ -249,10 +275,12 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
         }
         // 集合名(appid)
         if (Strings.isNotBlank(collectionName)){
-            query.with(PageRequest.of(pageNum-1,pageSize));
-            return findAllByQuery(query,className,collectionName);
+            collectionName = ALL_LOGS;
+
         }
-        return findAllByQuery(query,className).stream().skip((long) (pageNum - 1) * pageSize).limit(pageSize).toList();
+        query.with(PageRequest.of(pageNum-1,pageSize));
+        return findAllByQuery(query,className,collectionName);
+        //return findAllByQuery(query,className).stream().skip((long) (pageNum - 1) * pageSize).limit(pageSize).toList();
     }
 
     // =========== 数据删除 ==============
@@ -276,7 +304,6 @@ public class MongoRepositoryImpl<T> implements BasicMongoRepository<T> {
     public void clean(){
         // 清除三天前的日志信息
         LocalDate localDate = LocalDate.now().minusDays(3);
-        // System.out.println(localDate.toString());
         log.info("Clean starts at : " + localDate);
         Date from = Date.from(localDate.atStartOfDay(ZoneOffset.ofHours(8)).toInstant());
         ObjectId objectId = new ObjectId(from);

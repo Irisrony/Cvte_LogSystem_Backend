@@ -24,7 +24,7 @@ import java.util.*;
 @Slf4j
 public class LogInfoService {
     @Autowired
-    private MongoRepositoryImpl<LogInfo> mongoRepository;
+    private MongoRepositoryImpl mongoRepository;
 
     @Autowired
     private RedisRepositoryImpl redisRepository;
@@ -37,19 +37,16 @@ public class LogInfoService {
      * @return
      */
     public Boolean saveOrUpsert(String appid, String userid, LinkedList<Info> infos) {
+        // 检查appid是否存在
         if(!redisRepository.setHasKey("appid",appid)){
             throw new AppException(ResultCode.APPID_NOT_EXIST);
         }
         Date now = new Date();
         List<LogInfo> list = new ArrayList<>();
-        Set<DefaultTypedTuple<String>> set = new HashSet<>();
-        infos.forEach(info -> {
-            ObjectId objectId = new ObjectId(now);
-            list.add(new LogInfo(objectId, appid, userid, info));
-            set.add(new DefaultTypedTuple<>(appid+"_"+objectId, (double) now.getTime()));
-        });
+        infos.forEach(info -> list.add(new LogInfo(new ObjectId(now), appid, userid, info)));
+        // 保存日志
         mongoRepository.insert(list,appid);
-        redisRepository.setZSetValues("uploaded",set);
+        mongoRepository.insert(list,"allLogs");
         return true;
     }
 }
