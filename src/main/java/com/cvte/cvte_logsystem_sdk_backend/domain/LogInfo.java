@@ -1,11 +1,9 @@
-package com.cvte.cvte_logsystem_sdk_backend.db_mongo.domain;
+package com.cvte.cvte_logsystem_sdk_backend.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
-
-import java.util.LinkedList;
 
 /**
  * @Description TODO
@@ -20,5 +18,5 @@ public class LogInfo {
     private ObjectId id;
     private String appid;
     private String userid;
-    private LinkedList<Info> infos;
+    private Info info;
 }

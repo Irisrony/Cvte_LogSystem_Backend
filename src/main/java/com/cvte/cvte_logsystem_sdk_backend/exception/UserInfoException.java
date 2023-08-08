@@ -1,4 +1,4 @@
-package com.cvte.cvte_logsystem_sdk_backend.db_redis.exception;
+package com.cvte.cvte_logsystem_sdk_backend.exception;
 
 import com.cvte.cvte_logsystem_sdk_backend.response.ResultCode;
 import lombok.Data;

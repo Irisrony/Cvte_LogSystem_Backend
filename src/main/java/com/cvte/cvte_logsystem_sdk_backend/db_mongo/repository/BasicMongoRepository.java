@@ -91,11 +91,11 @@ public interface BasicMongoRepository {
 
     // =========== 数据插入 ==============
 
-    default void save(Object obj, String className) {
+    default void save(Object obj, String collectionName) {
 
     }
 
-    default void insert(List<Object> obj, String className) {
+    default void insert(List<Object> list, String collectionName) {
 
     }
 

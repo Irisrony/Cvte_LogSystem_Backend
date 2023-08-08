@@ -1,7 +1,8 @@
 package com.cvte.cvte_logsystem_sdk_backend.response;
 
-import com.cvte.cvte_logsystem_sdk_backend.db_mongo.exception.AppException;
-import com.cvte.cvte_logsystem_sdk_backend.db_redis.exception.UserInfoException;
+import com.cvte.cvte_logsystem_sdk_backend.exception.AppException;
+import com.cvte.cvte_logsystem_sdk_backend.exception.ArgsException;
+import com.cvte.cvte_logsystem_sdk_backend.exception.UserInfoException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,7 +30,7 @@ public class UnifiedExceptionResponse extends BasicResponse {
      * @param e
      * @return
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, ArgsException.class})
     protected Object methodArgNotValid(Exception e) {
         log.error(e.getMessage());
         return responseFail(ResultCode.VALIDATION_FAILED);

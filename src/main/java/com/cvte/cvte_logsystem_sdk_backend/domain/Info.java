@@ -1,4 +1,4 @@
-package com.cvte.cvte_logsystem_sdk_backend.db_mongo.domain;
+package com.cvte.cvte_logsystem_sdk_backend.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +19,9 @@ public class Info {
     private int type;
     private long timestamp;
     private String msg;
+
+    @Override
+    public String toString() {
+        return "Info{" + "type=" + type + ", timestamp=" + timestamp + ", msg='" + msg + '\'' + '}';
+    }
 }

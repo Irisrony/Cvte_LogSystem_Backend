@@ -1,6 +1,6 @@
 package com.cvte.cvte_logsystem_sdk_backend.db_mongo.repositoryImpl;
 
-import com.cvte.cvte_logsystem_sdk_backend.db_mongo.domain.LogInfo;
+import com.cvte.cvte_logsystem_sdk_backend.domain.LogInfo;
 import com.cvte.cvte_logsystem_sdk_backend.db_mongo.repository.BasicMongoRepository;
 import com.mongodb.client.result.DeleteResult;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +74,11 @@ public class MongoRepositoryImpl implements BasicMongoRepository {
         mongoTemplate.save(obj,collectionName);
     }
 
+    @Override
+    public void insert(List list,String collectionName){
+        mongoTemplate.insert(list,collectionName);
+    }
+
     // =========== 条件查询 =============
 
     // 1. 字段查询
@@ -106,10 +111,10 @@ public class MongoRepositoryImpl implements BasicMongoRepository {
         Set<String> set = getCollectionNames();
         if(set != null){
             set.forEach(s -> {
-                res.add(mongoTemplate.findOne(query,className,s));
+                res.addAll(mongoTemplate.find(query,className,s));
             });
         }
-        return res.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        return res.stream().filter(Objects::nonNull).toList();
     }
 
     // 2. Sql查询
@@ -153,7 +158,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository {
                 res.addAll(mongoTemplate.find(query,className,s));
             });
         }
-        return res.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        return res.stream().filter(Objects::nonNull).toList();
     }
 
     // 3. 查询全部数据
@@ -238,7 +243,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository {
             query.with(PageRequest.of(pageNum-1,pageSize));
             return findAllByQuery(query,className,collectionName);
         }
-        return findAllByQuery(query,className).stream().skip((long) (pageNum - 1) *pageSize).limit(pageSize).toList();
+        return findAllByQuery(query,className).stream().skip((long) (pageNum - 1) * pageSize).limit(pageSize).toList();
     }
 
     // =========== 数据删除 ==============
@@ -260,12 +265,12 @@ public class MongoRepositoryImpl implements BasicMongoRepository {
      * 定时删除
      */
     public void clean(){
-        LocalDate localDate = LocalDate.now().minusDays(2);
-        System.out.println(localDate.toString());
+        // 清除三天前的日志信息
+        LocalDate localDate = LocalDate.now().minusDays(3);
+        // System.out.println(localDate.toString());
+        log.info("Clean starts at : " + localDate);
         Date from = Date.from(localDate.atStartOfDay(ZoneOffset.ofHours(8)).toInstant());
         ObjectId objectId = new ObjectId(from);
-        System.out.println(localDate.toString() + "#" + objectId.toHexString());
-        log.info("now#{}, ObjectId#{}", localDate.toString(), objectId.toHexString());
 
         Query query = Query.query(Criteria.where("_id").lt(objectId)).limit(10000);
 
@@ -276,7 +281,6 @@ public class MongoRepositoryImpl implements BasicMongoRepository {
         for (String s : set) {
             DeleteResult deleteResult = mongoTemplate.remove(query, LogInfo.class, s);
             log.info("delete #{} result#{}-{}, cost#{}", s, deleteResult.wasAcknowledged(), deleteResult.getDeletedCount(), System.currentTimeMillis() - now);
-
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.cvte.cvte_logsystem_sdk_backend.db_redis.domain;
+package com.cvte.cvte_logsystem_sdk_backend.domain;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -1,7 +1,7 @@
-package com.cvte.cvte_logsystem_sdk_backend.db_redis.service;
+package com.cvte.cvte_logsystem_sdk_backend.service;
 
-import com.cvte.cvte_logsystem_sdk_backend.db_redis.domain.UserInfo;
-import com.cvte.cvte_logsystem_sdk_backend.db_redis.exception.UserInfoException;
+import com.cvte.cvte_logsystem_sdk_backend.domain.UserInfo;
+import com.cvte.cvte_logsystem_sdk_backend.exception.UserInfoException;
 import com.cvte.cvte_logsystem_sdk_backend.db_redis.repositoryImpl.RedisRepositoryImpl;
 import com.cvte.cvte_logsystem_sdk_backend.response.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;

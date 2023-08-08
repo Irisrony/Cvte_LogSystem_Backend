@@ -1,9 +1,10 @@
-package com.cvte.cvte_logsystem_sdk_backend.db_mongo.controller;
+package com.cvte.cvte_logsystem_sdk_backend.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cvte.cvte_logsystem_sdk_backend.db_mongo.domain.Info;
-import com.cvte.cvte_logsystem_sdk_backend.db_mongo.service.LogInfoService;
+import com.cvte.cvte_logsystem_sdk_backend.domain.Info;
+import com.cvte.cvte_logsystem_sdk_backend.exception.ArgsException;
+import com.cvte.cvte_logsystem_sdk_backend.service.LogInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,10 @@ public class LogInfoController {
 
     @PostMapping("/logUpload")
     public Map<String,Boolean> logUpload(@RequestBody JSONObject parseMap){
+        if(!parseMap.containsKey("logArray") || !parseMap.containsKey("appid") || !parseMap.containsKey("userid")){
+            throw new ArgsException();
+        }
+
         List<Object> list = (List<Object>) parseMap.get("logArray");
         String appid = parseMap.get("appid").toString();
         String userid = parseMap.get("userid").toString();

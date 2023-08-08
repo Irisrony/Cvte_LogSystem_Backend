@@ -1,10 +1,9 @@
-package com.cvte.cvte_logsystem_sdk_backend.db_redis.controller;
+package com.cvte.cvte_logsystem_sdk_backend.controller;
 
-import com.cvte.cvte_logsystem_sdk_backend.db_redis.domain.UserInfo;
-import com.cvte.cvte_logsystem_sdk_backend.db_redis.service.UserInfoService;
+import com.cvte.cvte_logsystem_sdk_backend.domain.UserInfo;
+import com.cvte.cvte_logsystem_sdk_backend.service.UserInfoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
