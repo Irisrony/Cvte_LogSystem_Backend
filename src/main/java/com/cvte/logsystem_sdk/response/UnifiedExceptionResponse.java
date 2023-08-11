@@ -68,7 +68,7 @@ public class UnifiedExceptionResponse extends BasicResponse {
     @ExceptionHandler(AppException.class)
     protected Object appException(AppException e){
         log.error(e.toString());
-        return responseFail(e.getCode(),e.getMsg());
+        return responseFail(ResultCode.APPID_NOT_EXIST);
     }
 
     /**
@@ -79,7 +79,7 @@ public class UnifiedExceptionResponse extends BasicResponse {
     @ExceptionHandler(UserInfoException.class)
     protected Object userInfoException(UserInfoException e){
         log.error(e.toString());
-        return responseFail(e.getCode(),e.getMsg());
+        return responseFail(ResultCode.UNAUTHORIZED);
     }
 
     /**

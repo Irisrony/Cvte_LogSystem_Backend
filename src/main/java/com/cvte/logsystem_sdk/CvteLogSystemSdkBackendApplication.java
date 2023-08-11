@@ -21,7 +21,7 @@ public class CvteLogSystemSdkBackendApplication {
 
     //@Scheduled(cron = "0 * 21-23,0-5 * * ?")
     @Scheduled(cron = "*/5 * * * * *")
-    public void cron(){
+    public void cron1(){
         mongoRepository.clean();
     }
 

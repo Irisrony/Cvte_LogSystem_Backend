@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
+import java.util.LinkedHashMap;
+
 /**
  * @Description TODO
  * @Classname LogInfo
@@ -18,9 +20,11 @@ public class LogInfo {
     private ObjectId id;
     private String appid;
     private String userid;
+
     private int type;
     private long timestamp;
     private String msg;
+    private LinkedHashMap extra;
 
     public LogInfo(ObjectId id,String appid,String userid,Info info){
         this.id = id;
@@ -29,9 +33,10 @@ public class LogInfo {
         this.type = info.getType();
         this.timestamp = info.getTimestamp();
         this.msg = info.getMsg();
+        this.extra = info.getExtra();
     }
 
     public Info getInfo(){
-        return new Info(type,timestamp,msg);
+        return new Info(type,timestamp,msg,extra);
     }
 }

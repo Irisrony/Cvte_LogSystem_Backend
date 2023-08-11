@@ -155,17 +155,6 @@ public interface BasicRedisRepository {
     }
 
     /**
-     * 将数据放入Set中
-     *
-     * @param key
-     * @param values
-     * @return 成功个数
-     */
-    default long setSetValue(String key, Object... values) {
-        return 0;
-    }
-
-    /**
      * 添加数据到Set中并设置过期时间
      *
      * @param key

@@ -14,7 +14,6 @@ public enum ResultCode {
     VALIDATION_FAILED("A0103","参数校验失败"),
     APPID_NOT_EXIST("A0104","appid不存在"),
     UNAUTHORIZED("A0105","用户无需上传");
-
     private String code;
     private String msg;
 

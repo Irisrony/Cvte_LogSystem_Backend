@@ -26,11 +26,13 @@ public class UserInfoService {
      * @return
      */
     public Boolean isExist(UserInfo userInfo){
+        final String appid = userInfo.getAppid(),userid = userInfo.getUserid();
         // 先清除过期的KV
-        redisRepository.removeZSetValueByScore(userInfo.getAppid(),Long.MIN_VALUE,new Date().getTime() - 24*60*60*3);
-        if (!redisRepository.zsetHasKey(userInfo.getAppid(), userInfo.getUserid())){
+        redisRepository.removeZSetValueByScore(appid,Long.MIN_VALUE,new Date().getTime() - 24*60*60*1000*3);
+        if (!redisRepository.zsetHasKey(appid, userid)){
             throw new UserInfoException(ResultCode.UNAUTHORIZED);
         }
+        redisRepository.setZSetValue("uploading",appid+"_"+userid,new Date().getTime());
         return true;
     }
 }

@@ -275,21 +275,6 @@ public class RedisRepositoryImpl implements BasicRedisRepository {
     }
 
     /**
-     * 将数据放入Set中
-     * @param key
-     * @param values
-     * @return 成功个数
-     */
-    public long setSetValue(String key,Object... values){
-        try{
-            return redisTemplate.opsForSet().add(key,values);
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return 0;
-        }
-    }
-
-    /**
      * 添加数据到Set中并设置过期时间
      * @param key
      * @param time

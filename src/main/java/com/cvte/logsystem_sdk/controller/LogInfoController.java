@@ -41,7 +41,7 @@ public class LogInfoController {
         LinkedList<Info> infos = new LinkedList<>();
         list.forEach(s -> infos.add(JSON.parseObject(JSON.toJSONString(s),Info.class)));
 
-        boolean status = logInfoService.saveOrUpsert(appid,userid,infos);
+        boolean status = logInfoService.singleSave(appid,userid,infos);
 
         Map<String,Boolean> res = new HashMap<>();
         res.put("status",status);
