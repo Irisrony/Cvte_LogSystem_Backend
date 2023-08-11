@@ -3,8 +3,6 @@ package com.cvte.logsystem.response;
 import com.cvte.logsystem.exception.AppInfoException;
 import com.cvte.logsystem.exception.AuthException;
 import com.cvte.logsystem.exception.LoginException;
-import com.cvte.logsystem.response.BasicResponse;
-import com.cvte.logsystem.response.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -78,7 +76,7 @@ public class ControllerExceptionAdvice extends BasicResponse {
     @ExceptionHandler(AuthException.class)
     protected Object authException(AuthException e) {
         log.error(e.toString());
-        return responseFail(e.getCode(),e.getMsg());
+        return responseFail(ResultCode.UNAUTHORIZED);
     }
 
     /**

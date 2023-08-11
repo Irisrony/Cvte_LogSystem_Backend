@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @SpringBootTest
@@ -36,6 +37,10 @@ class RedisTest {
         System.out.println(redisRepositoryImpl.setZSetValue("fPhlM37R", "user4",20));
         System.out.println(redisRepositoryImpl.setZSetValue("fPhlM37R", "user2",30));
         System.out.println(redisRepositoryImpl.getZSet("fPhlM37R",0,-1));
+    }
+
+    @Test
+    void simpleTest(){
     }
 
 }

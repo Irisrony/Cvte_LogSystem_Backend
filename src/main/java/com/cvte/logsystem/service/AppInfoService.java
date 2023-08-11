@@ -60,12 +60,14 @@ public class AppInfoService {
      * @return  上传状态
      */
     public Boolean addUploadData(UploadEntity uploadEntity){
-        if (appInfoMapper.checkExist(uploadEntity.getAppid()) != 1){
-            log.warn("Appid : " + uploadEntity.getAppid() + " 不存在！");
+        final String appid = uploadEntity.getAppid(),userid = uploadEntity.getUserid();
+        if (!redisRepository.setHasKey("appid",appid)){
+            log.warn("Appid : " + appid + " 不存在！");
             throw new AppInfoException(ResultCode.APPID_NOT_EXIST);
         }else if (appInfoMapper.addUploadData(uploadEntity) != 1){
             log.error("Add " + uploadEntity + " to database failed!");
         }
+        redisRepository.setZSetValue(appid,userid,new Date().getTime());
         return true;
     }
 

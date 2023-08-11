@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.Length;
 public class AppInfo {
     private String appid;
     @NotBlank
-    @Length(min = 4,max = 50)
+    @Length(min = 2,max = 50)
     private String appName;
     private Object userid;
     public AppInfo(String appid,String appName){

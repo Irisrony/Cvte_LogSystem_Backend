@@ -78,6 +78,10 @@ public interface BasicMongoRepository<T> {
     }
 
 
+    List<LogInfo> findOneField(String field, Class className, String collectionName);
+
+    List<LogInfo> findOneField(String field, Class className);
+
     default List<T> findByPage(int pageNum, int pageSize, Class className, String sortTag) {
         return null;
     }
