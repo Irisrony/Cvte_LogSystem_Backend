@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cvte.logsystem_sdk.aop.annotation.VerifyArgs;
 import com.cvte.logsystem_sdk.domain.Info;
 import com.cvte.logsystem_sdk.service.LogInfoService;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

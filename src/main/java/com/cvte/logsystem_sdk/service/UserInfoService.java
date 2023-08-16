@@ -2,7 +2,7 @@ package com.cvte.logsystem_sdk.service;
 
 import com.cvte.logsystem_sdk.domain.UserInfo;
 import com.cvte.logsystem_sdk.exception.UserInfoException;
-import com.cvte.logsystem_sdk.db_redis.repositoryImpl.RedisRepositoryImpl;
+import com.cvte.logsystem_sdk.redis.repositoryImpl.RedisRepositoryImpl;
 import com.cvte.logsystem_sdk.response.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

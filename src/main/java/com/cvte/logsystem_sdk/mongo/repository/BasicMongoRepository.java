@@ -1,4 +1,4 @@
-package com.cvte.logsystem_sdk.db_mongo.repository;
+package com.cvte.logsystem_sdk.mongo.repository;
 
 import com.cvte.logsystem_sdk.domain.LogInfo;
 import org.springframework.data.mongodb.core.query.Query;

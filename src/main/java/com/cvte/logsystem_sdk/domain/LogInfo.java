@@ -3,7 +3,6 @@ package com.cvte.logsystem_sdk.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
 
 import java.util.LinkedHashMap;
 
@@ -17,7 +16,6 @@ import java.util.LinkedHashMap;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogInfo {
-    private ObjectId id;
     private String appid;
     private String userid;
 
@@ -26,8 +24,7 @@ public class LogInfo {
     private String msg;
     private LinkedHashMap extra;
 
-    public LogInfo(ObjectId id,String appid,String userid,Info info){
-        this.id = id;
+    public LogInfo(String appid,String userid,Info info){
         this.appid = appid;
         this.userid = userid;
         this.type = info.getType();
@@ -36,7 +33,7 @@ public class LogInfo {
         this.extra = info.getExtra();
     }
 
-    public Info getInfo(){
-        return new Info(type,timestamp,msg,extra);
-    }
+    //public Info getInfo(){
+    //    return new Info(type,timestamp,msg,extra);
+    //}
 }

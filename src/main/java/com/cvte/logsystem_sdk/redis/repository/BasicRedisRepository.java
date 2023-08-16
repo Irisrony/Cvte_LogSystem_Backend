@@ -1,4 +1,4 @@
-package com.cvte.logsystem_sdk.db_redis.repository;
+package com.cvte.logsystem_sdk.redis.repository;
 
 import java.util.*;
 

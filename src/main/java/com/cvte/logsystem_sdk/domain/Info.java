@@ -21,9 +21,4 @@ public class Info {
     private String msg;
 
     private LinkedHashMap extra;
-
-    @Override
-    public String toString() {
-        return "Info{" + "type=" + type + ", timestamp=" + timestamp + ", msg='" + msg + '\'' + '}';
-    }
 }

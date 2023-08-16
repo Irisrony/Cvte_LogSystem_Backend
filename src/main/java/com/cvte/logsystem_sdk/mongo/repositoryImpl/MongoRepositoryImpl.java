@@ -1,7 +1,7 @@
-package com.cvte.logsystem_sdk.db_mongo.repositoryImpl;
+package com.cvte.logsystem_sdk.mongo.repositoryImpl;
 
 import com.cvte.logsystem_sdk.domain.LogInfo;
-import com.cvte.logsystem_sdk.db_mongo.repository.BasicMongoRepository;
+import com.cvte.logsystem_sdk.mongo.repository.BasicMongoRepository;
 import com.mongodb.client.result.DeleteResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -64,7 +64,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     @Override
     public void singleUpsert(String key,String value,String updateKey,Object updateValue,Class className,String collectionName){
         Query query = Query.query(Criteria.where(key).is(value));
-        findOneByQuery(query,className,collectionName);
+        //findOneByQuery(query,className,collectionName);
         Update update = Update.update(updateKey,updateValue);
         mongoTemplate.upsert(query,update,className,collectionName);
     }

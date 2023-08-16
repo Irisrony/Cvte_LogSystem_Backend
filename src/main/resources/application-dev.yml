@@ -6,6 +6,7 @@
 server:
   port: 9092
 
+# 数据库配置
 spring:
   data:
     # MongoDB config
@@ -31,3 +32,12 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/test?serverTimezone=GMT%2b8
     username: root
     password: goodjob123
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: logInfo-producer-group
+  consumer:
+    group: logInfo-consumer-group
+    topic: logInfo
+    pull-batch-size: 10

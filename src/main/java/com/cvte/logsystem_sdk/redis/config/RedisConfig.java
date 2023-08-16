@@ -1,4 +1,4 @@
-package com.cvte.logsystem_sdk.db_redis.config;
+package com.cvte.logsystem_sdk.redis.config;
 
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
