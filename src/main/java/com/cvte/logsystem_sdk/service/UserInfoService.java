@@ -22,8 +22,8 @@ public class UserInfoService {
 
     /**
      * 检查用户是否需要上传日志
-     * @param userInfo
-     * @return
+     * @param userInfo 用户信息
+     * @return  用户是否需要上传
      */
     public Boolean isExist(UserInfo userInfo){
         final String appid = userInfo.getAppid(),userid = userInfo.getUserid();

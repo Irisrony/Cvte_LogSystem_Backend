@@ -5,7 +5,6 @@ import com.cvte.logsystem_sdk.domain.Info;
 import com.cvte.logsystem_sdk.domain.LogInfo;
 import com.cvte.logsystem_sdk.mongo.repositoryImpl.MongoRepositoryImpl;
 import com.cvte.logsystem_sdk.redis.repositoryImpl.RedisRepositoryImpl;
-import jakarta.annotation.Resource;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
@@ -15,12 +14,14 @@ import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
+
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.messaging.support.MessageBuilder;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 
@@ -30,8 +31,14 @@ class RedisTest {
     private RedisRepositoryImpl redisRepository;
     @Autowired
     private MongoRepositoryImpl mongoRepository;
-    //@Autowired
-    //private RocketMQTemplate rocketMQTemplate;
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
+
+    @Test
+    void appUploadTest(){
+        redisRepository.setZSetValue("b7eyu9T4","123",new Date().getTime());
+    }
+
     //@Test
     //void zsetTest() {
     //    redisRepository.setZSetValue("fPhlM37R","user1",new Date().getTime());
@@ -155,9 +162,9 @@ class RedisTest {
 
     @Test
     void simpleConsumerTest() throws Exception{
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("test-consumer-group");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("logInfo-consumer-group");
         consumer.setNamesrvAddr("127.0.0.1:9876");
-        consumer.subscribe("test-producer-group","*");
+        consumer.subscribe("logInfo","*");
         consumer.registerMessageListener((MessageListenerConcurrently) (list, consumeConcurrentlyContext) -> {
             System.out.println("开始消费");
             System.out.println("消息内容：" + new String(list.get(0).getBody()));
@@ -168,17 +175,13 @@ class RedisTest {
         System.in.read();
     }
 
-    //@Test
-    //void simpleTest(){
-    //    LogInfo logInfo = new LogInfo("123","abc",new Info());
-    //    rocketMQTemplate.convertAndSend("test-producer-group",logInfo);
-    //}
-    //
-    //@Test
-    //void simpleListener(){
-    //    List<String> list = rocketMQTemplate.receive(String.class);
-    //    list.forEach(System.out::println);
-    //}
+    @Test
+    void simpleConsumerTest2() {
+        for (int i = 0; i < 10000; i++) {
+            List<Object> list = rocketMQTemplate.receive(Object.class);
+            list.forEach(System.out::println);
+        }
+    }
 
     @Test
     void inputTest(){

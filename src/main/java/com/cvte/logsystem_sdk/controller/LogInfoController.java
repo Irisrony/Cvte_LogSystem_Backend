@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.cvte.logsystem_sdk.aop.annotation.VerifyArgs;
 import com.cvte.logsystem_sdk.domain.Info;
 import com.cvte.logsystem_sdk.service.LogInfoService;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,8 +38,7 @@ public class LogInfoController {
         String appid = parseMap.get("appid").toString();
         String userid = parseMap.get("userid").toString();
 
-        LinkedList<Info> infos = new LinkedList<>();
-        list.forEach(s -> infos.add(JSON.parseObject(JSON.toJSONString(s),Info.class)));
+        List<Info> infos = list.stream().map(s -> JSON.parseObject(JSON.toJSONString(s),Info.class)).toList();
 
         boolean status = logInfoService.singleSave(appid,userid,infos);
 

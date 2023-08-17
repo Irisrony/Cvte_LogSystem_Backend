@@ -13,29 +13,29 @@ public interface BasicRedisRepository {
 
     /**
      * 设置过期时间
-     * @param key
-     * @param time
-     * @return
+     * @param key 键
+     * @param time  过期时间
+     * @return  是否成功设置过期时间
      */
     boolean setKeyExpire(String key,long time);
 
     /**
      * 获取过期时间
-     * @param key
-     * @return
+     * @param key   键
+     * @return  过期时间
      */
     long getKeyExpireTime(String key);
 
     /**
      * 判断Key是否存在
-     * @param key
-     * @return
+     * @param key   键
+     * @return  是否存在
      */
     boolean hasKey(String key);
 
     /**
      * 删除key
-     * @param keys
+     * @param keys  键
      */
     void deleteKey(String... keys);
 
@@ -44,9 +44,9 @@ public interface BasicRedisRepository {
     /**
      * 获取键值表中某个键对应的值
      *
-     * @param key
-     * @param item
-     * @return
+     * @param key   redis的键
+     * @param item  hash的键
+     * @return  hash的键对应的值
      */
     default Object getHashMapValue(String key, String item) {
         return null;
@@ -55,10 +55,10 @@ public interface BasicRedisRepository {
     /**
      * 向哈希表中添加数据
      *
-     * @param key
-     * @param item
-     * @param value
-     * @return
+     * @param key   redis的键
+     * @param item  hash的键
+     * @param value 数据
+     * @return  是否添加成功
      */
     default boolean setHashMapValue(String key, String item, Object value) {
         return false;
@@ -67,8 +67,8 @@ public interface BasicRedisRepository {
     /**
      * 获取某个键对应的哈希表
      *
-     * @param key
-     * @return
+     * @param key   键
+     * @return  对应的hashmap
      */
     default Map<String, Object> getHashMap(String key) {
         return null;
@@ -77,9 +77,9 @@ public interface BasicRedisRepository {
     /**
      * 设置 K-HashMap
      *
-     * @param key
-     * @param map
-     * @return
+     * @param key   键
+     * @param map   hashmap
+     * @return  是否设置成功
      */
     default boolean setHashMap(String key, Map<String, Object> map) {
         return false;
@@ -88,10 +88,10 @@ public interface BasicRedisRepository {
     /**
      * 设置 K - HashMap 并 设置过期时间
      *
-     * @param key
-     * @param map
-     * @param time
-     * @return
+     * @param key   键
+     * @param map   hashmap
+     * @param time  过期时间
+     * @return  是否设置成功
      */
     default boolean setHashMap(String key, Map<String, Object> map, long time) {
         return false;
@@ -100,11 +100,11 @@ public interface BasicRedisRepository {
     /**
      * 向哈希表中插入数据并设置过期时间
      *
-     * @param key
-     * @param item
-     * @param value
-     * @param time
-     * @return
+     * @param key   键
+     * @param item  hash表的键
+     * @param value 待插入数据
+     * @param time  过期时间
+     * @return  是否设置成功
      */
     default boolean setHashMapValue(String key, String item, Object value, long time) {
         return false;
@@ -113,8 +113,8 @@ public interface BasicRedisRepository {
     /**
      * 删除哈希表中的值
      *
-     * @param key
-     * @param items
+     * @param key   键
+     * @param items hash的键
      */
     default void deleteHashMapValue(String key, String... items) {
 
@@ -123,9 +123,9 @@ public interface BasicRedisRepository {
     /**
      * 检查哈希表中是否存在item项
      *
-     * @param key
-     * @param item
-     * @return
+     * @param key   键
+     * @param item  hash的键
+     * @return  是否存在
      */
     default boolean hashMapHasKey(String key, String item) {
         return false;
@@ -136,8 +136,8 @@ public interface BasicRedisRepository {
     /**
      * 获取Set集合中的所有值
      *
-     * @param key
-     * @return
+     * @param key   键
+     * @return  对应的set
      */
     default Set<Object> getSet(String key) {
         return null;
@@ -146,9 +146,9 @@ public interface BasicRedisRepository {
     /**
      * 检查Set中是否存在该值
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key 键
+     * @param value 待查询的值
+     * @return  查询结果
      */
     default boolean setHasKey(String key, Object value) {
         return false;
@@ -157,10 +157,10 @@ public interface BasicRedisRepository {
     /**
      * 添加数据到Set中并设置过期时间
      *
-     * @param key
-     * @param time
-     * @param values
-     * @return
+     * @param key   键
+     * @param time 过期时间
+     * @param values    值
+     * @return  成功添加的条数
      */
     default long setSetValue(String key, long time, Object... values) {
         return 0;
@@ -169,8 +169,8 @@ public interface BasicRedisRepository {
     /**
      * 获取Set大小
      *
-     * @param key
-     * @return
+     * @param key   键
+     * @return  set大小
      */
     default long getSetSize(String key) {
         return 0;
@@ -179,9 +179,9 @@ public interface BasicRedisRepository {
     /**
      * 从Set中移除values
      *
-     * @param key
-     * @param values
-     * @return
+     * @param key   键
+     * @param values    待移除的数据
+     * @return  成功移除的条数
      */
     default long removeSetValue(String key, Object... values) {
         return 0;
@@ -192,10 +192,10 @@ public interface BasicRedisRepository {
     /**
      * 获取list中[start,end]的内容
      *
-     * @param key
-     * @param start
-     * @param end
-     * @return
+     * @param key   键
+     * @param start 起始
+     * @param end   结尾
+     * @return  [start,end]的list
      */
     default List<Object> getList(String key, long start, long end) {
         return null;
@@ -204,8 +204,8 @@ public interface BasicRedisRepository {
     /**
      * 获取list的长度
      *
-     * @param key
-     * @return
+     * @param key   键
+     * @return  长度
      */
     default long getListSize(String key) {
         return 0;
@@ -214,9 +214,9 @@ public interface BasicRedisRepository {
     /**
      * 获取list对应索引下的值
      *
-     * @param key
-     * @param index
-     * @return
+     * @param key   键
+     * @param index 索引
+     * @return  值
      */
     default Object getListValueByIndex(String key, long index) {
         return null;
@@ -225,9 +225,9 @@ public interface BasicRedisRepository {
     /**
      * 将值放入list
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key   键
+     * @param value 值
+     * @return  添加结果
      */
     default boolean setListValue(String key, Object value) {
         return false;
@@ -236,10 +236,10 @@ public interface BasicRedisRepository {
     /**
      * 将值放入list中并设置过期时间
      *
-     * @param key
-     * @param value
-     * @param time
-     * @return
+     * @param key   键
+     * @param value 值
+     * @param time  过期时间
+     * @return  添加结果
      */
     default boolean setListValue(String key, Object value, long time) {
         return false;
@@ -248,9 +248,9 @@ public interface BasicRedisRepository {
     /**
      * 将集合list放入list中
      *
-     * @param key
-     * @param list
-     * @return
+     * @param key   键
+     * @param list  list集合
+     * @return  添加结果
      */
     default boolean setListValue(String key, Object... list) {
         return false;
@@ -311,9 +311,7 @@ public interface BasicRedisRepository {
      * @param value
      * @return
      */
-    default boolean zsetHasKey(String key, Object value) {
-        return false;
-    }
+    boolean zsetHasKey(String key, Object value);
 
     /**
      * 将数据放入ZSet中
@@ -322,9 +320,7 @@ public interface BasicRedisRepository {
      * @param value
      * @return
      */
-    default boolean setZSetValue(String key, Object value, long score) {
-        return false;
-    }
+    boolean setZSetValue(String key, Object value, long score);
 
     /**
      * 添加数据到ZSet中并设置过期时间
@@ -334,9 +330,7 @@ public interface BasicRedisRepository {
      * @param value
      * @return
      */
-    default boolean setZSetValue(String key, Object value, long time, long score) {
-        return false;
-    }
+    boolean setZSetValue(String key, Object value, long time, long score);
 
     /**
      * 获取ZSet大小
@@ -344,9 +338,7 @@ public interface BasicRedisRepository {
      * @param key
      * @return
      */
-    default long getZSetSize(String key) {
-        return 0;
-    }
+    long getZSetSize(String key);
 
     /**
      * 从ZSet中移除values
@@ -355,9 +347,7 @@ public interface BasicRedisRepository {
      * @param values
      * @return
      */
-    default long removeZSetValue(String key, Object... values) {
-        return 0;
-    }
+    long removeZSetValue(String key, Object... values);
 
     /**
      * 根据score区间删除数据

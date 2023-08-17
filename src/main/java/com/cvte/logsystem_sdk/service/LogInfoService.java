@@ -6,10 +6,8 @@ import com.cvte.logsystem_sdk.domain.LogInfo;
 import com.cvte.logsystem_sdk.mongo.repositoryImpl.MongoRepositoryImpl;
 import com.cvte.logsystem_sdk.exception.AppException;
 import com.cvte.logsystem_sdk.response.ResultCode;
-import com.cvte.logsystem_sdk.rocketMQ.producer.repositoryImpl.ProducerRepositoryImpl;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * @Description TODO
+ * @Description Done
  * @Classname LogInfoService
  * @Date 2023/8/4 9:54 AM
  * @Created by liushenghao
@@ -35,12 +33,12 @@ public class LogInfoService {
     @Autowired
     private RedisRepositoryImpl redisRepository;
 
-    @Autowired
-    private ProducerRepositoryImpl producerRepository;
-
     private ConcurrentHashMap<String, uploadingEntity> map;
 
+    // 60秒
     private final static Long EXPIRE_TIME = (long) 6e4;
+    // 三天前
+    private final static int LIMIT_TIME = 24 * 60 * 60 * 1000 * 3;
     private final static String UPLOAD_ZSET = "uploading";
     private final static String ALL_LOG = "allLogs";
 
@@ -78,62 +76,45 @@ public class LogInfoService {
      * @param appid
      * @param userid
      * @param infos
-     * @return
+     * @return  上传结果
      */
-    public Boolean singleSave(String appid,String userid,LinkedList<Info> infos){
+    public Boolean singleSave(String appid,String userid,List<Info> infos){
         // 记录当前时间
         Date now = new Date();
         // key
         String key = appid + "_" + userid;
         // 检查该上传用户是否在待上传列表中
         // 删除过期信息
-        redisRepository.removeZSetValueByScore(UPLOAD_ZSET,Long.MIN_VALUE,now.getTime() - 24 * 60 * 60 * 1000 * 3);
-        if(!redisRepository.zsetHasKey("uploading", key)){
+        redisRepository.removeZSetValueByScore(UPLOAD_ZSET,Long.MIN_VALUE,now.getTime() - LIMIT_TIME);
+        if(!redisRepository.zsetHasKey(UPLOAD_ZSET, key)){
             throw new AppException(ResultCode.UNAUTHORIZED);
         }
         // 删除缓存，避免持续轮询
         redisRepository.removeZSetValue(appid,userid);
-        List<LogInfo> list = new ArrayList<>();
-        infos.forEach(info -> list.add(new LogInfo(appid, userid, info)));
 
-        return producerRepository.sendSingleMessage(list);
+        List<LogInfo> list = infos.stream().map(info -> new LogInfo(appid,userid,info)).toList();
+
+        // 新建
+        if(!map.containsKey(key)){
+            map.put(key, new uploadingEntity(now.getTime()));
+        }
+        // 保存
+        return map.get(key).update(now.getTime(),list);
     }
-    //public Boolean singleSave(String appid,String userid,LinkedList<Info> infos){
-    //    // 记录当前时间
-    //    Date now = new Date();
-    //    // key
-    //    String key = appid + "_" + userid;
-    //    // 检查该上传用户是否在待上传列表中
-    //    // 删除过期信息
-    //    redisRepository.removeZSetValueByScore(UPLOAD_ZSET,Long.MIN_VALUE,now.getTime() - 24 * 60 * 60 * 1000 * 3);
-    //    if(!redisRepository.zsetHasKey("uploading", key)){
-    //        throw new AppException(ResultCode.UNAUTHORIZED);
-    //    }
-    //    // 删除缓存，避免持续轮询
-    //    redisRepository.removeZSetValue(appid,userid);
-    //    List<LogInfo> list = new ArrayList<>();
-    //    infos.forEach(info -> list.add(new LogInfo(appid, userid, info)));
-    //
-    //    // 新建
-    //    if(!map.containsKey(key)){
-    //        map.put(key, new uploadingEntity(now.getTime()));
-    //    }
-    //    // 保存
-    //    return map.get(key).update(now.getTime(),list);
-    //}
 
     /**
      * 上传日志
-     * @return
      */
     public void saveOrUpsert() {
 
         final Enumeration<String> keys = map.keys();
 
+        // 有待上传用户
         while(keys.hasMoreElements()){
             String key = keys.nextElement();
             List<LogInfo> list = map.get(key).getInfoList();
             int n = list.size();
+            // 有待上传日志
             if(n != 0) {
                 try {
                     List<LogInfo> sublist = list.subList(0, n);
@@ -160,7 +141,7 @@ public class LogInfoService {
      * 判断是否已长时间未更新信息
      * @param curTime   当前时间
      * @param preTime   上一次更新时间
-     * @return  比较结果
+     * @return  是否过期
      */
     private boolean isUpload(Long curTime,Long preTime){
         return curTime - preTime > EXPIRE_TIME;

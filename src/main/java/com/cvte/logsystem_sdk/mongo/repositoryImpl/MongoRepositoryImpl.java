@@ -64,7 +64,6 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     @Override
     public void singleUpsert(String key,String value,String updateKey,Object updateValue,Class className,String collectionName){
         Query query = Query.query(Criteria.where(key).is(value));
-        //findOneByQuery(query,className,collectionName);
         Update update = Update.update(updateKey,updateValue);
         mongoTemplate.upsert(query,update,className,collectionName);
     }

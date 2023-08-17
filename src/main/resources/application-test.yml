@@ -6,19 +6,18 @@
 server:
   port: 9092
 
-# 数据库配置
 spring:
   data:
     # MongoDB config
     mongodb:
-      host: localhost
+      host: 175.178.76.218
       port: 27017
       authentication-database: test
       username: rootTest
       password: goodjob123
     # Redis config
     redis:
-      host: localhost
+      host: 175.178.76.218
       port: 6379
       database: 0
       lettuce:
@@ -26,10 +25,10 @@ spring:
           max-idle: 16
           max-active: 32
           min-idle: 8
+      password: goodjob123
   # Mysql config
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/test?serverTimezone=GMT%2b8
-    username: root
-    password: goodjob123
-
+    url: jdbc:mysql://175.178.76.218:3306/test?serverTimezone=GMT%2b8
+    username: test
+    password: test

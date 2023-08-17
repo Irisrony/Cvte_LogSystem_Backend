@@ -27,8 +27,8 @@ public class UnifiedExceptionResponse extends BasicResponse {
     /**
      * 参数校验异常
      *
-     * @param e
-     * @return
+     * @param e 异常
+     * @return  消息统一返回封装
      */
     @ExceptionHandler({MethodArgumentNotValidException.class, ArgsException.class})
     protected Object methodArgNotValid(Exception e) {
@@ -39,8 +39,8 @@ public class UnifiedExceptionResponse extends BasicResponse {
     /**
      * 缺少参数
      *
-     * @param e
-     * @return
+     * @param e 异常
+     * @return  消息统一返回封装
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     protected Object missingServletRequestParameter(MissingServletRequestParameterException e) {
@@ -51,8 +51,8 @@ public class UnifiedExceptionResponse extends BasicResponse {
     /**
      * 不支持的请求类型
      *
-     * @param e
-     * @return
+     * @param e 异常
+     * @return  消息统一返回封装
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected Object httpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e) {
@@ -62,8 +62,8 @@ public class UnifiedExceptionResponse extends BasicResponse {
 
     /**
      * appid不存在
-     * @param e
-     * @return
+     * @param e 异常
+     * @return 消息统一返回封装
      */
     @ExceptionHandler(AppException.class)
     protected Object appException(AppException e){
@@ -73,8 +73,8 @@ public class UnifiedExceptionResponse extends BasicResponse {
 
     /**
      * 用户无需上传日志
-     * @param e
-     * @return
+     * @param e 异常
+     * @return  消息统一返回封装
      */
     @ExceptionHandler(UserInfoException.class)
     protected Object userInfoException(UserInfoException e){
@@ -85,8 +85,8 @@ public class UnifiedExceptionResponse extends BasicResponse {
     /**
      * 其他常见错误
      *
-     * @param e
-     * @return
+     * @param e 异常
+     * @return  消息统一返回封装
      */
     @ExceptionHandler({HttpClientErrorException.class, IOException.class, Exception.class, SQLException.class})
     protected Object commonException(Exception e) {
