@@ -1,6 +1,6 @@
-package com.cvte.logsystem.db_redis.repositoryImpl;
+package com.cvte.logsystem.redis.repositoryImpl;
 
-import com.cvte.logsystem.db_redis.repository.BasicRedisRepository;
+import com.cvte.logsystem.redis.repository.BasicRedisRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

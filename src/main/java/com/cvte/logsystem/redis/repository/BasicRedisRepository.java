@@ -1,4 +1,4 @@
-package com.cvte.logsystem.db_redis.repository;
+package com.cvte.logsystem.redis.repository;
 
 import java.util.*;
 
@@ -13,29 +13,29 @@ public interface BasicRedisRepository{
 
     /**
      * 设置过期时间
-     * @param key
-     * @param time
-     * @return
+     * @param key   键
+     * @param time  过期时间
+     * @return  设置结果
      */
     boolean setKeyExpire(String key,long time);
 
     /**
      * 获取过期时间
-     * @param key
-     * @return
+     * @param key   键
+     * @return  过期时间
      */
     long getKeyExpireTime(String key);
 
     /**
      * 判断Key是否存在
-     * @param key
-     * @return
+     * @param key   键
+     * @return  判断结果
      */
     boolean hasKey(String key);
 
     /**
      * 删除key
-     * @param keys
+     * @param keys  键
      */
     void deleteKey(String... keys);
 
@@ -44,9 +44,9 @@ public interface BasicRedisRepository{
     /**
      * 获取键值表中某个键对应的值
      *
-     * @param key
-     * @param item
-     * @return
+     * @param key   redis的键
+     * @param item  hash的键
+     * @return  对应的值
      */
     default Object getHashMapValue(String key, String item) {
         return null;

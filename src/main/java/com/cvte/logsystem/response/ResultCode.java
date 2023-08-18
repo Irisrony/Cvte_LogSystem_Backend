@@ -1,5 +1,8 @@
 package com.cvte.logsystem.response;
 
+/**
+ * 响应代码
+ */
 public enum ResultCode {
     SUCCESS("00000", "成功"),
     USER_LOGIN_ERROR("A0100", "用户名或密码错误"),

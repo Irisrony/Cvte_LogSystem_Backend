@@ -10,10 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import static com.cvte.logsystem.utils.HttpUtils.getRequest;
+import static com.cvte.logsystem.utils.LogUtils.httpLogError;
 
 /**
  * @Description TODO
@@ -24,8 +28,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Aspect
 @Component
-@Slf4j
+@Order(2)
 public class VerifyTokenAspect {
+    private final static String KEY = "token";
+
     @Pointcut("execution(@com.cvte.logsystem.aop.annotation.VerifyToken * *(..))")
     public void methodPointCut() {
     }
@@ -33,12 +39,11 @@ public class VerifyTokenAspect {
     @Before("methodPointCut()")
     public void loginCheck() {
         try {
-            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-            ServletRequestAttributes attributes = (ServletRequestAttributes) requestAttributes;
-            HttpServletRequest request = attributes.getRequest();
-            Cookie cookie = CookieUtils.get(request,"token");
+            HttpServletRequest request = getRequest();
+            Cookie cookie = CookieUtils.get(request,KEY);
             String token = cookie == null ? null : cookie.getValue();
-            if(token == null || !JwtUtils.verifyToken(token)){
+            if(!JwtUtils.verifyToken(token)){
+                httpLogError(ResultCode.UNAUTHORIZED.getMsg());
                 throw new AuthException(ResultCode.UNAUTHORIZED);
             }
         } catch (Exception e) {

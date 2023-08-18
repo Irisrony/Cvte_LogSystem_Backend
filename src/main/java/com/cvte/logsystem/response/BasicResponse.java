@@ -13,8 +13,8 @@ public abstract class BasicResponse {
     /**
      * 默认成功返回
      *
-     * @param data
-     * @return
+     * @param data  响应数据
+     * @return  返回结果
      */
     protected ResultVo responseSuccess(Object data) {
         ResultVo res = new ResultVo();
@@ -33,8 +33,8 @@ public abstract class BasicResponse {
     /**
      * 带失败代码的返回
      *
-     * @param code
-     * @return
+     * @param code  错误码
+     * @return  返回结果
      */
     protected ResultVo responseFail(ResultCode code) {
         ResultVo res = new ResultVo();
@@ -47,9 +47,9 @@ public abstract class BasicResponse {
     /**
      * 自定义消息的错误返回
      *
-     * @param code
-     * @param msg
-     * @return
+     * @param code  错误码
+     * @param msg   错误消息
+     * @return  返回结果
      */
     protected ResultVo responseFail(ResultCode code, String msg) {
         ResultVo res = new ResultVo();
@@ -59,6 +59,12 @@ public abstract class BasicResponse {
         return res;
     }
 
+    /**
+     * 自定义消息的错误返回
+     * @param code  错误码
+     * @param msg   错误消息
+     * @return  返回结果
+     */
     protected ResultVo responseFail(String code,String msg){
         ResultVo res = new ResultVo();
         res.setCode(code);

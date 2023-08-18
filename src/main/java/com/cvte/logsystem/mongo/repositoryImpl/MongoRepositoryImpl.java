@@ -1,6 +1,6 @@
-package com.cvte.logsystem.db_mongo.repositoryImpl;
+package com.cvte.logsystem.mongo.repositoryImpl;
 
-import com.cvte.logsystem.db_mongo.repository.BasicMongoRepository;
+import com.cvte.logsystem.mongo.repository.BasicMongoRepository;
 
 
 import com.cvte.logsystem.domain.LogInfo;

@@ -1,7 +1,5 @@
 package com.cvte.logsystem.response;
 
-import com.cvte.logsystem.response.BasicResponse;
-import com.cvte.logsystem.response.ResultVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.MethodParameter;
@@ -12,7 +10,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * 统一返回处理
+ */
 @RestControllerAdvice
 public class ControllerResponseAdvice extends BasicResponse implements ResponseBodyAdvice {
 
@@ -32,6 +34,11 @@ public class ControllerResponseAdvice extends BasicResponse implements ResponseB
                 throw new RuntimeException(e);
             }
         }
-        return responseSuccess(body == null ? new HashMap<>() : body);
+        if(body == null || (body instanceof HashMap<?,?> && ((HashMap<?, ?>) body).size() == 0)){
+            Map<String,Boolean> res = new HashMap<>();
+            res.put("status",true);
+            return responseSuccess(res);
+        }
+        return responseSuccess(body);
     }
 }

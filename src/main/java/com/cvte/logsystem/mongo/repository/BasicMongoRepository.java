@@ -1,4 +1,4 @@
-package com.cvte.logsystem.db_mongo.repository;
+package com.cvte.logsystem.mongo.repository;
 
 import com.cvte.logsystem.domain.LogInfo;
 import org.springframework.data.mongodb.core.query.Query;
@@ -14,7 +14,7 @@ import java.util.Set;
  * @Created by liushenghao
  */
 public interface BasicMongoRepository<T> {
-    // =========== 获取全部集合名称 =============
+    // =========== 获取集合信息 =============
     default Set<String> getCollectionNames(){
         return null;
     }

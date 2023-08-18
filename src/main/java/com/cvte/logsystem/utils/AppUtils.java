@@ -25,7 +25,7 @@ public class AppUtils {
 
     /**
      * 生成Appid
-     * @return
+     * @return  返回appid
      */
     public static String getAppid(){
         StringBuffer sb = new StringBuffer();

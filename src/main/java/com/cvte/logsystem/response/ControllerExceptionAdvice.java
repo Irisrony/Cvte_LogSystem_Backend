@@ -21,9 +21,8 @@ public class ControllerExceptionAdvice extends BasicResponse {
 
     /**
      * 参数校验异常
-     *
-     * @param e
-     * @return
+     * @param e 错误异常
+     * @return  返回结果
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected Object methodArgNotValid(Exception e) {
@@ -33,9 +32,8 @@ public class ControllerExceptionAdvice extends BasicResponse {
 
     /**
      * 缺少参数
-     *
-     * @param e
-     * @return
+     * @param e 错误异常
+     * @return  返回结果
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     protected Object missingServletRequestParameter(MissingServletRequestParameterException e) {
@@ -45,9 +43,8 @@ public class ControllerExceptionAdvice extends BasicResponse {
 
     /**
      * 不支持的请求类型
-     *
-     * @param e
-     * @return
+     * @param e 错误异常
+     * @return  返回结果
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected Object httpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e) {
@@ -57,9 +54,8 @@ public class ControllerExceptionAdvice extends BasicResponse {
 
     /**
      * 签名验证失败
-     *
-     * @param e
-     * @return
+     * @param e 错误异常
+     * @return  返回结果
      */
     @ExceptionHandler(SignatureException.class)
     protected Object signatureException(SignatureException e) {
@@ -69,9 +65,8 @@ public class ControllerExceptionAdvice extends BasicResponse {
 
     /**
      * 权限验证失败
-     *
-     * @param e
-     * @return
+     * @param e 错误异常
+     * @return  返回结果
      */
     @ExceptionHandler(AuthException.class)
     protected Object authException(AuthException e) {
@@ -81,31 +76,30 @@ public class ControllerExceptionAdvice extends BasicResponse {
 
     /**
      * appid生成失败
-     * @param e
-     * @return
+     * @param e 错误异常
+     * @return  返回结果
      */
     @ExceptionHandler(AppInfoException.class)
     protected Object appInfoException(AppInfoException e){
         log.error(e.toString());
-        return responseFail(e.getCode(),e.getMsg());
+        return responseFail(ResultCode.APPID_CREATE_FAILED);
     }
 
     /**
      * 登陆失败
-     * @param e
-     * @return
+     * @param e 错误异常
+     * @return  返回结果
      */
     @ExceptionHandler(LoginException.class)
     protected Object loginException(LoginException e){
         log.error(e.toString());
-        return responseFail(e.getCode(),e.getMsg());
+        return responseFail(ResultCode.USER_LOGIN_ERROR);
     }
 
     /**
      * 其他常见错误
-     *
-     * @param e
-     * @return
+     * @param e 错误异常
+     * @return  返回结果
      */
     @ExceptionHandler({HttpClientErrorException.class, IOException.class, Exception.class, SQLException.class})
     protected Object commonException(Exception e) {

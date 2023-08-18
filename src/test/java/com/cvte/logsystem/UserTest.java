@@ -1,16 +1,16 @@
 package com.cvte.logsystem;
 
-import com.cvte.logsystem.db_mongo.repositoryImpl.MongoRepositoryImpl;
-import com.cvte.logsystem.db_redis.repositoryImpl.RedisRepositoryImpl;
+import com.cvte.logsystem.mongo.repositoryImpl.MongoRepositoryImpl;
+import com.cvte.logsystem.redis.repositoryImpl.RedisRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
-class RedisTest {
+class UserTest {
     @Autowired
     private RedisRepositoryImpl redisRepositoryImpl;
 

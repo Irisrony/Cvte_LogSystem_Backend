@@ -1,14 +1,14 @@
 package com.cvte.logsystem.service;
 
-import com.cvte.logsystem.db_mongo.repositoryImpl.MongoRepositoryImpl;
+import com.cvte.logsystem.mongo.repositoryImpl.MongoRepositoryImpl;
 import com.cvte.logsystem.domain.AppInfo;
 import com.cvte.logsystem.domain.LogInfo;
 import com.cvte.logsystem.domain.UploadEntity;
 import com.cvte.logsystem.exception.AppInfoException;
-import com.cvte.logsystem.db_mysql.mapper.AppInfoMapper;
+import com.cvte.logsystem.mysql.mapper.AppInfoMapper;
 import com.cvte.logsystem.response.ResultCode;
 import com.cvte.logsystem.utils.AppUtils;
-import com.cvte.logsystem.db_redis.repositoryImpl.RedisRepositoryImpl;
+import com.cvte.logsystem.redis.repositoryImpl.RedisRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,8 @@ public class AppInfoService {
 
     @Autowired
     private MongoRepositoryImpl mongoRepository;
+
+    private final static String KEY = "userid";
 
     /**
      * 生成新应用id并更新到数据库
@@ -73,7 +75,7 @@ public class AppInfoService {
 
     /**
      * 获取所有appid信息
-     * @return
+     * @return  appid集合
      */
     public List<AppInfo> getAllAppInfo(){
         return appInfoMapper.getAllAppInfo();
@@ -81,13 +83,13 @@ public class AppInfoService {
 
     /**
      * 获取appid与对应的userid列表
-     * @return
+     * @return  appid与userid封装的集合
      */
     public List<AppInfo> getIdSet(){
         List<AppInfo> list = getAllAppInfo();
         for (AppInfo appInfo : list) {
             String appid = appInfo.getAppid();
-            List<LogInfo> userList = mongoRepository.findOneField("userid", LogInfo.class,appid);
+            List<LogInfo> userList = mongoRepository.findOneField(KEY, LogInfo.class,appid);
             appInfo.setUserid(userList.stream().map(LogInfo::getUserid).collect(Collectors.toSet()));
         }
         return list;

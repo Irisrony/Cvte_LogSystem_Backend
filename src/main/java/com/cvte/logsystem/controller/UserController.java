@@ -1,5 +1,6 @@
 package com.cvte.logsystem.controller;
 
+import com.cvte.logsystem.aop.annotation.LogRecord;
 import com.cvte.logsystem.exception.LoginException;
 import com.cvte.logsystem.service.UserService;
 import com.cvte.logsystem.domain.User;
@@ -19,30 +20,36 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private final static String KEY = "token";
+    private final static int EXPIRE_TIME = 24*60*60;
+
     /**
      * 管理员登陆
-     * @param user
-     * @param response
-     * @return
+     * @param user  用户登陆实体
+     * @param response  响应
+     * @return  返回处理结果
      */
     @PostMapping("/login")
-    public Map<String,String> login(@Valid @RequestBody User user, HttpServletResponse response) {
+    @LogRecord
+    public Map<?,?> login(@Valid @RequestBody User user, HttpServletResponse response) {
         String token = userService.login(user);
         if (token == null) {
             throw new LoginException(ResultCode.USER_LOGIN_ERROR);
         }
-        CookieUtils.set(response,"token",token,24*60*60,true);
+
+        CookieUtils.set(response,KEY,token,EXPIRE_TIME,true);
+
         return new HashMap<>();
     }
 
     /**
      * 管理员登出
-     * @param response
-     * @return
+     * @param response  响应
+     * @return  返回处理结果
      */
     @PostMapping("/logout")
-    public Map<String,String> logout(HttpServletResponse response) {
-        CookieUtils.set(response,"token","",0,true);
+    public Map<?,?> logout(HttpServletResponse response) {
+        CookieUtils.set(response,KEY,null,0,true);
         return new HashMap<>();
     }
 

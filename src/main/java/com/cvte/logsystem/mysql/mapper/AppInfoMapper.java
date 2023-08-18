@@ -1,4 +1,4 @@
-package com.cvte.logsystem.db_mysql.mapper;
+package com.cvte.logsystem.mysql.mapper;
 
 import com.cvte.logsystem.domain.AppInfo;
 import com.cvte.logsystem.domain.UploadEntity;

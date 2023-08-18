@@ -1,5 +1,6 @@
 package com.cvte.logsystem.controller;
 
+import com.cvte.logsystem.aop.annotation.LogRecord;
 import com.cvte.logsystem.aop.annotation.VerifyToken;
 import com.cvte.logsystem.domain.LogInfo;
 import com.cvte.logsystem.service.LogInfoService;
@@ -25,6 +26,15 @@ public class LogInfoController {
     @Autowired
     private LogInfoService logInfoService;
 
+    /**
+     * 日志查询
+     * @param pageNum   页数
+     * @param pageSize  每页大小
+     * @param appid 应用id
+     * @param userid    用户id
+     * @param content   模糊查询关键词
+     * @return  返回日志集合
+     */
     @GetMapping("/sendLog")
     @VerifyToken
     public Map<String, Object> sendLog(
