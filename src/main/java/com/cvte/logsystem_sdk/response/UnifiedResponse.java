@@ -11,12 +11,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.util.HashMap;
 
-/**
- * @Description TODO
- * @Classname UnifiedResponse
- * @Date 2023/8/2 4:56 PM
- * @Created by liushenghao
- */
 @RestControllerAdvice
 public class UnifiedResponse extends BasicResponse implements ResponseBodyAdvice {
     @Override

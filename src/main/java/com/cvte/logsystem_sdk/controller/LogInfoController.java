@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cvte.logsystem_sdk.aop.annotation.VerifyArgs;
 import com.cvte.logsystem_sdk.domain.Info;
 import com.cvte.logsystem_sdk.service.LogInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,22 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
-/**
- * @Description TODO
- * @Classname LogInfoController
- * @Date 2023/8/4 9:44 AM
- * @Created by liushenghao
- */
 @RestController
 @RequestMapping("/api")
 public class LogInfoController {
-    @Autowired
+    @Resource
     private LogInfoService logInfoService;
 
     /**
      * 日志上传
-     * @param parseMap
-     * @return
+     * @param parseMap  参数映射表
+     * @return  上传状态
      */
     @PostMapping("/logUpload")
     @VerifyArgs

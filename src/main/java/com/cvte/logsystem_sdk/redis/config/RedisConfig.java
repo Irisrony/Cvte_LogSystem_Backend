@@ -8,12 +8,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-/**
- * @Description TODO
- * @Classname RedisConfig
- * @Date 2023/8/4 9:31 AM
- * @Created by liushenghao
- */
 @Configuration
 public class RedisConfig {
 

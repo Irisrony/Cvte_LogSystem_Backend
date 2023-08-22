@@ -3,6 +3,7 @@ package com.cvte.logsystem_sdk.mongo.repositoryImpl;
 import com.cvte.logsystem_sdk.domain.LogInfo;
 import com.cvte.logsystem_sdk.mongo.repository.BasicMongoRepository;
 import com.mongodb.client.result.DeleteResult;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.bson.types.ObjectId;
@@ -22,16 +23,10 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-/**
- * @Description TODO
- * @Classname MongoRepository
- * @Date 2023/8/2 6:36 PM
- * @Created by liushenghao
- */
 @Repository
 @Slf4j
 public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
-    @Autowired
+    @Resource
     private MongoTemplate mongoTemplate;
 
     private final static String ALL_LOGS = "allLogs";
@@ -70,8 +65,8 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
 
     /**
      * 保存单个数据
-     * @param obj
-     * @param collectionName
+     * @param obj   数据
+     * @param collectionName    集合名
      */
     @Override
     public void save(LogInfo obj,String collectionName){
@@ -80,8 +75,8 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
 
     /**
      * 批量插入数据
-     * @param list
-     * @param collectionName
+     * @param list  数据列表
+     * @param collectionName    集合名
      */
     @Override
     public void insert(List<LogInfo> list,String collectionName){
@@ -193,10 +188,10 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
 
     /**
      * 在单个集合中查找单个字段
-     * @param field
-     * @param className
-     * @param collectionName
-     * @return
+     * @param field 字段
+     * @param className 类名
+     * @param collectionName    集合名
+     * @return  日志列表
      */
     @Override
     public List<LogInfo> findOneField(String field,Class className,String collectionName){
@@ -207,9 +202,9 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
 
     /**
      * 在所有集合中查找单个字段
-     * @param field
-     * @param className
-     * @return
+     * @param field 字段
+     * @param className 类名
+     * @return  日志列表
      */
     @Override
     public List<LogInfo> findOneField(String field,Class className){

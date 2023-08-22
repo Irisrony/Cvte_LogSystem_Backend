@@ -7,12 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @Description TODO
- * @Classname BasicMongoRepository
- * @Date 2023/8/2 6:36 PM
- * @Created by liushenghao
- */
 public interface BasicMongoRepository<T> {
     // =========== 获取全部集合名称 =============
     default Set<String> getCollectionNames(){

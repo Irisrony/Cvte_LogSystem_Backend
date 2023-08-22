@@ -3,12 +3,6 @@ package com.cvte.logsystem_sdk.response;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Description TODO
- * @Classname BasicResponse
- * @Date 2023/8/2 4:58 PM
- * @Created by liushenghao
- */
 public abstract class BasicResponse {
     private final Map<String,Boolean> fail = new HashMap<>();
 

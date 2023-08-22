@@ -14,12 +14,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.io.IOException;
 import java.sql.SQLException;
 
-/**
- * @Description TODO
- * @Classname ControllerExceptionAdivce
- * @Date 2023/8/4 2:49 PM
- * @Created by liushenghao
- */
 @Slf4j
 @RestControllerAdvice
 public class UnifiedExceptionResponse extends BasicResponse {

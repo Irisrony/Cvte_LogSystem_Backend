@@ -4,12 +4,6 @@ import com.cvte.logsystem_sdk.response.ResultCode;
 import lombok.Data;
 import org.apache.logging.log4j.util.Strings;
 
-/**
- * @Description TODO
- * @Classname UserInfoException
- * @Date 2023/8/4 3:22 PM
- * @Created by liushenghao
- */
 @Data
 public class UserInfoException extends RuntimeException{
     private String msg;

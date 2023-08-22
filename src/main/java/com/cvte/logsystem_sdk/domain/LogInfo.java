@@ -6,12 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.LinkedHashMap;
 
-/**
- * @Description TODO
- * @Classname LogInfo
- * @Date 2023/8/2 3:40 PM
- * @Created by liushenghao
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

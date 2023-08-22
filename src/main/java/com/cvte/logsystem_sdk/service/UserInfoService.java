@@ -4,20 +4,14 @@ import com.cvte.logsystem_sdk.domain.UserInfo;
 import com.cvte.logsystem_sdk.exception.UserInfoException;
 import com.cvte.logsystem_sdk.redis.repositoryImpl.RedisRepositoryImpl;
 import com.cvte.logsystem_sdk.response.ResultCode;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-/**
- * @Description TODO
- * @Classname LogInfoService
- * @Date 2023/8/2 4:08 PM
- * @Created by liushenghao
- */
 @Service
 public class UserInfoService {
-    @Autowired
+    @Resource
     private RedisRepositoryImpl redisRepository;
 
     /**

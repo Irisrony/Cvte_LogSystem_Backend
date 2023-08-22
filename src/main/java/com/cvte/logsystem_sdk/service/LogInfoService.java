@@ -6,9 +6,9 @@ import com.cvte.logsystem_sdk.domain.LogInfo;
 import com.cvte.logsystem_sdk.mongo.repositoryImpl.MongoRepositoryImpl;
 import com.cvte.logsystem_sdk.exception.AppException;
 import com.cvte.logsystem_sdk.response.ResultCode;
+import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,20 +17,14 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * @Description Done
- * @Classname LogInfoService
- * @Date 2023/8/4 9:54 AM
- * @Created by liushenghao
- */
 @Service
 @Slf4j
 @EnableScheduling
 public class LogInfoService {
-    @Autowired
+    @Resource
     private MongoRepositoryImpl mongoRepository;
 
-    @Autowired
+    @Resource
     private RedisRepositoryImpl redisRepository;
 
     private ConcurrentHashMap<String, uploadingEntity> map;
@@ -73,9 +67,9 @@ public class LogInfoService {
 
     /**
      * 分片上传
-     * @param appid
-     * @param userid
-     * @param infos
+     * @param appid 应用id
+     * @param userid    用户id
+     * @param infos 日志列表
      * @return  上传结果
      */
     public Boolean singleSave(String appid,String userid,List<Info> infos){
@@ -85,7 +79,7 @@ public class LogInfoService {
         String key = appid + "_" + userid;
         // 检查该上传用户是否在待上传列表中
         // 删除过期信息
-        redisRepository.removeZSetValueByScore(UPLOAD_ZSET,Long.MIN_VALUE,now.getTime() - LIMIT_TIME);
+        long delete = redisRepository.removeZSetValueByScore(UPLOAD_ZSET,Long.MIN_VALUE,now.getTime() - LIMIT_TIME);
         if(!redisRepository.zsetHasKey(UPLOAD_ZSET, key)){
             throw new AppException(ResultCode.UNAUTHORIZED);
         }

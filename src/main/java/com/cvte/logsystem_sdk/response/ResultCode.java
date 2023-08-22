@@ -1,11 +1,5 @@
 package com.cvte.logsystem_sdk.response;
 
-/**
- * @Description TODO
- * @Classname ResultCode
- * @Date 2023/8/2 5:00 PM
- * @Created by liushenghao
- */
 public enum ResultCode {
     SUCCESS("00000", "成功"),
     MISSING_PARAM("A0100", "缺少参数"),

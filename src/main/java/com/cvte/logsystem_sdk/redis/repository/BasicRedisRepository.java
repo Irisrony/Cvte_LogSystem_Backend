@@ -2,12 +2,6 @@ package com.cvte.logsystem_sdk.redis.repository;
 
 import java.util.*;
 
-/**
- * @Description TODO
- * @Classname RedisRepository
- * @Date 2023/8/2 3:48 PM
- * @Created by liushenghao
- */
 public interface BasicRedisRepository {
     // =================  Key-Value  ==================
 
@@ -259,10 +253,10 @@ public interface BasicRedisRepository {
     /**
      * 将集合list放入list中,并设置过期时间
      *
-     * @param key
-     * @param list
-     * @param time
-     * @return
+     * @param key   键
+     * @param list  集合
+     * @param time  过期时间
+     * @return  是否成功
      */
     default boolean setListValue(String key, long time, Object... list) {
         return false;
@@ -271,10 +265,10 @@ public interface BasicRedisRepository {
     /**
      * 根据索引修改值
      *
-     * @param key
-     * @param index
-     * @param value
-     * @return
+     * @param key   键
+     * @param index 索引
+     * @param value 值
+     * @return  是否成功
      */
     default boolean updateListValueByIndex(String key, long index, Object value) {
         return false;
@@ -283,10 +277,10 @@ public interface BasicRedisRepository {
     /**
      * 删除N个value值
      *
-     * @param key
-     * @param cnt
-     * @param value
-     * @return
+     * @param key   键
+     * @param cnt   数量
+     * @param value 值
+     * @return  成功删除的数量
      */
     default long removeListValue(String key, long cnt, Object value) {
         return 0;
@@ -297,8 +291,10 @@ public interface BasicRedisRepository {
     /**
      * 获取ZSet集合中[start,end]值  [0,-1]表示全部区间
      *
-     * @param key
-     * @return
+     * @param key   键
+     * @param start 起始位置
+     * @param end 结束位置
+     * @return  [start,end]set集合
      */
     default Set<Object> getZSet(String key, long start, long end) {
         return null;
@@ -307,55 +303,55 @@ public interface BasicRedisRepository {
     /**
      * 检查ZSet中是否存在该值
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key   键
+     * @param value 值
+     * @return  是否存在
      */
     boolean zsetHasKey(String key, Object value);
 
     /**
      * 将数据放入ZSet中
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key   键
+     * @param value 值
+     * @return  是否成功
      */
     boolean setZSetValue(String key, Object value, long score);
 
     /**
      * 添加数据到ZSet中并设置过期时间
      *
-     * @param key
-     * @param time
-     * @param value
-     * @return
+     * @param key   键
+     * @param time  过期时间
+     * @param value 值
+     * @return  是否成功
      */
     boolean setZSetValue(String key, Object value, long time, long score);
 
     /**
      * 获取ZSet大小
      *
-     * @param key
-     * @return
+     * @param key   键
+     * @return  set大小
      */
     long getZSetSize(String key);
 
     /**
      * 从ZSet中移除values
      *
-     * @param key
-     * @param values
-     * @return
+     * @param key   键
+     * @param values    值
+     * @return  成功删除的个数
      */
     long removeZSetValue(String key, Object... values);
 
     /**
      * 根据score区间删除数据
      *
-     * @param key
-     * @param minExpireTime
-     * @param maxExpireTime
-     * @return
+     * @param key   键
+     * @param minExpireTime 最小过期时间
+     * @param maxExpireTime 最大过期时间
+     * @return 返回成功删除的数量
      */
     default long removeZSetValueByScore(String key, long minExpireTime, long maxExpireTime) {
         return 0;
