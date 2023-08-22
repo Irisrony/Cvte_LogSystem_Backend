@@ -17,12 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * @Description TODO
- * @Classname AppInfoService
- * @Date 2023/7/28 11:31 AM
- * @Created by liushenghao
- */
 @Service
 @Slf4j
 public class AppInfoService {
@@ -77,7 +71,7 @@ public class AppInfoService {
      * 获取所有appid信息
      * @return  appid集合
      */
-    public List<AppInfo> getAllAppInfo(){
+    private List<AppInfo> getAllAppInfo(){
         return appInfoMapper.getAllAppInfo();
     }
 

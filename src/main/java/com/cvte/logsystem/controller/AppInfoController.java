@@ -5,26 +5,18 @@ import com.cvte.logsystem.aop.annotation.VerifyToken;
 import com.cvte.logsystem.domain.AppInfo;
 import com.cvte.logsystem.domain.UploadEntity;
 import com.cvte.logsystem.service.AppInfoService;
+import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @Description TODO
- * @Classname AppController
- * @Date 2023/7/28 11:28 AM
- * @Created by liushenghao
- */
-
 @RestController
 @RequestMapping("/user")
 public class AppInfoController {
-    @Autowired
+    @Resource
     private AppInfoService appInfoService;
 
     /**
@@ -34,6 +26,7 @@ public class AppInfoController {
      */
     @PostMapping("/getAppid")
     @VerifyToken
+    @LogRecord
     public Map<String,String> addAppInfo(@Valid @RequestBody AppInfo appInfo){
         String appid = appInfoService.addAppInfo(appInfo.getAppName());
         Map<String,String> res = new HashMap<>();
@@ -48,6 +41,7 @@ public class AppInfoController {
      */
     @PostMapping("/report")
     @VerifyToken
+    @LogRecord
     public Map<String,Boolean> addUploadData(@Valid @RequestBody UploadEntity uploadEntity){
         Boolean flag = appInfoService.addUploadData(uploadEntity);
         Map<String,Boolean> res = new HashMap<>();
@@ -61,6 +55,7 @@ public class AppInfoController {
      */
     @GetMapping("/idSet")
     @VerifyToken
+    @LogRecord
     public Map<String, Object> getIdSet(){
         List<AppInfo> list = appInfoService.getIdSet();
         Map<String, Object> map = new HashMap<>();

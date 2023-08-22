@@ -3,13 +3,6 @@ package com.cvte.logsystem.exception;
 import com.cvte.logsystem.response.ResultCode;
 import lombok.Data;
 
-/**
- * @Description TODO
- * @Classname AuthException
- * @Date 2023/7/21 10:43 AM
- * @Created by liushenghao
- */
-
 @Data
 public class AuthException extends RuntimeException {
     private String code;
@@ -19,6 +12,7 @@ public class AuthException extends RuntimeException {
         this.code = code.getCode();
         this.msg = code.getMsg();
     }
+
     public AuthException(ResultCode code, String msg){
         this.code = code.getCode();
         this.msg = msg == null ? code.getMsg() : msg;
@@ -26,6 +20,14 @@ public class AuthException extends RuntimeException {
 
     @Override
     public String toString() {
+        return "AuthException{" +
+                "code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                '}';
+    }
+
+    @Override
+    public String getMessage(){
         return "AuthException{" +
                 "code='" + code + '\'' +
                 ", msg='" + msg + '\'' +

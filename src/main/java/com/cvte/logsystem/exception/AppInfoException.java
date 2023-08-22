@@ -3,12 +3,6 @@ package com.cvte.logsystem.exception;
 import com.cvte.logsystem.response.ResultCode;
 import lombok.Data;
 
-/**
- * @Description TODO
- * @Classname AppInfoException
- * @Date 2023/7/28 2:26 PM
- * @Created by liushenghao
- */
 @Data
 public class AppInfoException extends RuntimeException{
     private String code;

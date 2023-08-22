@@ -6,12 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-/**
- * @Description TODO
- * @Classname App
- * @Date 2023/7/28 11:23 AM
- * @Created by liushenghao
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

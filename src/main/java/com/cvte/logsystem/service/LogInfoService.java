@@ -2,20 +2,14 @@ package com.cvte.logsystem.service;
 
 import com.cvte.logsystem.domain.LogInfo;
 import com.cvte.logsystem.mongo.repositoryImpl.MongoRepositoryImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * @Description TODO
- * @Classname LogInfoService
- * @Date 2023/8/4 3:56 PM
- * @Created by liushenghao
- */
 @Service
 public class LogInfoService {
-    @Autowired
+    @Resource
     private MongoRepositoryImpl mongoRepository;
 
     private final static String KEY = "userid";

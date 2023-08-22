@@ -10,12 +10,6 @@ import java.io.IOException;
 
 import static com.cvte.logsystem.utils.LogUtils.httpLogInfo;
 
-/**
- * @Description TODO
- * @Classname LogRecordAspect
- * @Date 2023/8/18 10:58 AM
- * @Created by liushenghao
- */
 @Aspect
 @Component
 @Order(1)

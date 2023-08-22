@@ -15,7 +15,7 @@ public class JwtUtils {
     private final static int EXPIRE_TIME = 86400000;
 
     /**
-     * 获取用户token
+     * 生成用户token
      * @param user  用户信息
      * @return  token
      */

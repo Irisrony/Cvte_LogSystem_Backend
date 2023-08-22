@@ -5,19 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.cvte.logsystem.utils.HttpUtils.getRequest;
 
-/**
- * @Description TODO
- * @Classname LogUtils
- * @Date 2023/8/18 9:46 AM
- * @Created by liushenghao
- */
 @Component
 @Slf4j
 public class LogUtils {
@@ -45,12 +35,14 @@ public class LogUtils {
         log.info("User_host : " + from + " - calling method : " + path + " - msg : " + msg);
     }
 
-    public static void httpLogError(String msg) throws IOException {
-        HttpServletRequest request = getRequest();
+    public static void httpLogError(String msg){
 
-        String from = getRemote(request);
-        String path = getPath(request);
+            HttpServletRequest request = getRequest();
 
-        log.error("User_host : " + from + " - calling method : " + path + " - msg : " + msg);
+            String from = getRemote(request);
+            String path = getPath(request);
+
+            log.error("User_host : " + from + " - calling method : " + path + " - msg : " + msg);
+
     }
 }

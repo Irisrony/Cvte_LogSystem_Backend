@@ -25,4 +25,12 @@ public class LoginException extends RuntimeException {
                 ", msg='" + msg + '\'' +
                 '}';
     }
+
+    @Override
+    public String getMessage(){
+        return "LoginException{" +
+                "code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                '}';
+    }
 }

@@ -6,7 +6,7 @@ package com.cvte.logsystem.response;
 public enum ResultCode {
     SUCCESS("00000", "成功"),
     USER_LOGIN_ERROR("A0100", "用户名或密码错误"),
-    UNAUTHORIZED("A0101", "token非法"),
+    UNAUTHORIZED("A0101", "登陆过期,请重新登陆"),
     MISSING_PARAM("A0102", "缺少参数"),
     UNSUPPORTED_METHOD("A0103", "不支持的请求类型"),
     SYSTEM_ERROR("A0104", "系统错误"),

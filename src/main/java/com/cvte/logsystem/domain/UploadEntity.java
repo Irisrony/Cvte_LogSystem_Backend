@@ -4,12 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-/**
- * @Description TODO
- * @Classname UploadEntity
- * @Date 2023/7/28 3:45 PM
- * @Created by liushenghao
- */
 @Data
 public class UploadEntity {
     private int id;

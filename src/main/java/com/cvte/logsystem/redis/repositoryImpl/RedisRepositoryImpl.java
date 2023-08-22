@@ -1,8 +1,8 @@
 package com.cvte.logsystem.redis.repositoryImpl;
 
 import com.cvte.logsystem.redis.repository.BasicRedisRepository;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -11,25 +11,19 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @Description TODO
- * @Classname RedisUtils
- * @Date 2023/7/31 9:48 AM
- * @Created by liushenghao
- */
 @Component
 @Slf4j
 public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
     // =================  Key-Value  ==================
 
     /**
      * 设置过期时间
-     * @param key
-     * @param time
-     * @return
+     * @param key   键
+     * @param time  过期时间
+     * @return  是否设置成功
      */
     public boolean setKeyExpire(String key,long time){
         if(time > 0){
@@ -40,8 +34,8 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 获取过期时间
-     * @param key
-     * @return
+     * @param key   键
+     * @return  过期时间
      */
     public long getKeyExpireTime(String key) throws NullPointerException{
         if(hasKey(key)){
@@ -52,8 +46,8 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 判断Key是否存在
-     * @param key
-     * @return
+     * @param key   键
+     * @return  是否存在
      */
     public boolean hasKey(String key) throws NullPointerException{
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
@@ -61,7 +55,7 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 删除key
-     * @param keys
+     * @param keys  键
      */
     public void deleteKey(String... keys){
         if(keys != null && keys.length > 0){
@@ -76,8 +70,8 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 获取缓存
-     * @param key
-     * @return
+     * @param key   键
+     * @return  值
      */
     public Object getValue(String key){
         return key == null ? null : redisTemplate.opsForValue().get(key);
@@ -85,9 +79,9 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 添加缓存
-     * @param key
-     * @param value
-     * @return
+     * @param key   键
+     * @param value 值
+     * @return  是否添加成功
      */
     public boolean setValue(String key,Object value){
         try{
@@ -101,14 +95,17 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 添加缓存并设置过期时间
-     * @param key
-     * @param value
-     * @param time
-     * @return
+     * @param key   键
+     * @param value 值
+     * @param time  过期时间
+     * @return  是否设置成功
      */
     public boolean setValue(String key,Object value,long time){
         try{
-            redisTemplate.opsForValue().set(key,value,time);
+            redisTemplate.opsForValue().set(key,value);
+            if (time > 0){
+                setKeyExpire(key,time);
+            }
             return true;
         }catch (Exception e){
             log.error(e.getMessage());
@@ -262,7 +259,7 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
      * 检查Set中是否存在该值
      * @param key   Set名称
      * @param value 数据
-     * @return
+     * @return  是否存在
      */
     public boolean setHasKey(String key,Object value){
         try{
@@ -293,7 +290,7 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
      * @param key   Set名称
      * @param time  过期时间
      * @param values    数据
-     * @return
+     * @return  成功添加的数量
      */
     public long setSetValue(String key,long time,Object... values){
         try{
@@ -326,7 +323,7 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
      * 从Set中移除values
      * @param key   Set名称
      * @param values    待删除数据
-     * @return
+     * @return  成功移除数量
      */
     public long removeSetValue(String key,Object... values){
         try{
@@ -493,8 +490,10 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 获取ZSet集合中[start,end]值  [0,-1]表示全部区间
-     * @param key
-     * @return
+     * @param key   键
+     * @param start 起始位置
+     * @param end 结束位置
+     * @return  [start,end]的set
      */
     public Set<Object> getZSet(String key,long start,long end){
         try{
@@ -507,9 +506,9 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 检查ZSet中是否存在该值
-     * @param key
-     * @param value
-     * @return
+     * @param key   键
+     * @param value 值
+     * @return  是否存在该值
      */
     public boolean zsetHasKey(String key,Object value){
         try{
@@ -522,9 +521,9 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 将数据放入ZSet中
-     * @param key
-     * @param value
-     * @return
+     * @param key   键
+     * @param value 值
+     * @return  是否添加成功
      */
     public boolean setZSetValue(String key,Object value,long score){
         try{
@@ -537,9 +536,9 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 一次性添加多条数据
-     * @param key
-     * @param values
-     * @return
+     * @param key   键
+     * @param values    值
+     * @return  是否添加成功
      */
     public boolean setZSetValues(String key,Set values){
         try{
@@ -553,10 +552,10 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 添加数据到ZSet中并设置过期时间
-     * @param key
-     * @param time
-     * @param value
-     * @return
+     * @param key   键
+     * @param time  过期时间
+     * @param value 值
+     * @return  是否添加成功
      */
     public boolean setZSetValue(String key,Object value,long time,long score){
         try{
@@ -576,8 +575,8 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 获取ZSet大小
-     * @param key
-     * @return
+     * @param key   键
+     * @return  set大小
      */
     public long getZSetSize(String key){
         try{
@@ -590,9 +589,9 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 从ZSet中移除values
-     * @param key
-     * @param values
-     * @return
+     * @param key   键
+     * @param values    值
+     * @return  成功添加的个数
      */
     public long removeZSetValue(String key,Object... values){
         try{
@@ -605,10 +604,10 @@ public class RedisRepositoryImpl implements Serializable, BasicRedisRepository {
 
     /**
      * 根据score区间删除数据
-     * @param key
-     * @param minExpireTime
-     * @param maxExpireTime
-     * @return
+     * @param key   键
+     * @param minExpireTime 最小过期时间
+     * @param maxExpireTime 最大过期时间
+     * @return  成功删除的个数
      */
     public long removeZSetValueByScore(String key,long minExpireTime,long maxExpireTime){
         try{

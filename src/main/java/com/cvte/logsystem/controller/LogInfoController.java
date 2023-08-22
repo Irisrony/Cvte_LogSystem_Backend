@@ -4,7 +4,10 @@ import com.cvte.logsystem.aop.annotation.LogRecord;
 import com.cvte.logsystem.aop.annotation.VerifyToken;
 import com.cvte.logsystem.domain.LogInfo;
 import com.cvte.logsystem.service.LogInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,16 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @Description TODO
- * @Classname LogInfoController
- * @Date 2023/8/4 3:40 PM
- * @Created by liushenghao
- */
 @RestController
 @RequestMapping("/user")
+@Validated
 public class LogInfoController {
-    @Autowired
+    @Resource
     private LogInfoService logInfoService;
 
     /**
@@ -37,9 +35,10 @@ public class LogInfoController {
      */
     @GetMapping("/sendLog")
     @VerifyToken
+    @LogRecord
     public Map<String, Object> sendLog(
-            @RequestParam Integer pageNum, @RequestParam Integer pageSize, @RequestParam(required = false) String appid,
-            @RequestParam(required = false) String userid,@RequestParam(required = false) String content){
+            @Min(1) @RequestParam Integer pageNum, @Min(1) @RequestParam Integer pageSize, @NotBlank @RequestParam String appid,
+            @NotBlank @RequestParam String userid, @RequestParam(required = false) String content){
 
         List<LogInfo> logs = logInfoService.sendLog(pageNum,pageSize,appid,userid,content);
         Long total = logInfoService.getTotal(userid,content,appid);

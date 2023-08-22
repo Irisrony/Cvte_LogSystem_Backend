@@ -18,6 +18,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class ControllerResponseAdvice extends BasicResponse implements ResponseBodyAdvice {
 
+    private final static String DEFAULT_KEY = "status";
+
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
         return !returnType.getParameterType().isAssignableFrom(ResultVo.class);
@@ -36,7 +38,7 @@ public class ControllerResponseAdvice extends BasicResponse implements ResponseB
         }
         if(body == null || (body instanceof HashMap<?,?> && ((HashMap<?, ?>) body).size() == 0)){
             Map<String,Boolean> res = new HashMap<>();
-            res.put("status",true);
+            res.put(DEFAULT_KEY,true);
             return responseSuccess(res);
         }
         return responseSuccess(body);

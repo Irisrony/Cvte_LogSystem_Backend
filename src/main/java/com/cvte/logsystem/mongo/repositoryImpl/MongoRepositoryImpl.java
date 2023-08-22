@@ -24,12 +24,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-/**
- * @Description TODO
- * @Classname MongoRepositoryImpl
- * @Date 2023/8/2 5:34 PM
- * @Created by liushenghao
- */
 @Repository
 @Slf4j
 public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
@@ -37,8 +31,13 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     private MongoTemplate mongoTemplate;
 
     private final static String ALL_LOGS = "allLogs";
+    private final static String USER_ID = "userid";
     private final static String SORTED_TAG = "timestamp";
     private final static String REGEX_TAG = "msg";
+    private final static String CLEAN_TAG  = "_id";
+    private final static int EXPIRE_DAY = 3;
+    private final static int ZONE_OFFSET = 8;
+    private final static int TIME_OUT = 10000;
 
     // =========== 获取全部集合名称 =============
 
@@ -66,15 +65,15 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     @Override
     public void singleUpsert(String key,String value,String updateKey,Object updateValue,Class className,String collectionName){
         Query query = Query.query(Criteria.where(key).is(value));
-        findOneByQuery(query,className,collectionName);
+        //findOneByQuery(query,className,collectionName);
         Update update = Update.update(updateKey,updateValue);
         mongoTemplate.upsert(query,update,className,collectionName);
     }
 
     /**
      * 保存单个数据
-     * @param obj
-     * @param collectionName
+     * @param obj   单个日志
+     * @param collectionName    集合名
      */
     @Override
     public void save(LogInfo obj,String collectionName){
@@ -83,8 +82,8 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
 
     /**
      * 批量插入数据
-     * @param list
-     * @param collectionName
+     * @param list  日志集合
+     * @param collectionName    集合名
      */
     @Override
     public void insert(List<LogInfo> list,String collectionName){
@@ -99,9 +98,9 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
      * 单个集合查询同一字段
      * @param key   键
      * @param value 值
-     * @param className Entity.class
-     * @param collectionName    集合名称(${appid})
-     * @return  Entity
+     * @param className 类名
+     * @param collectionName    集合名称
+     * @return  日志
      */
     @Override
     public LogInfo findOneByField(String key, String value, Class className, String collectionName){
@@ -113,16 +112,23 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
      * 在所有集合中查询同一字段
      * @param key   键
      * @param value 值
-     * @param className Entity.class
+     * @param className 类名
      * @return  该id在所有集合中的数据集合
      */
     @Override
     public List<LogInfo> findAllByField(String key, String value, Class className){
         Query query = Query.query(Criteria.where(key).is(value)).with(Sort.by(Sort.Order.desc(SORTED_TAG)));
-        List<Object> res = new ArrayList<>(mongoTemplate.find(query, className, ALL_LOGS));
+        List<Object> res = new ArrayList<Object>(mongoTemplate.find(query, className, ALL_LOGS));
         return res.stream().filter(Objects::nonNull).map(s -> (LogInfo) s).toList();
     }
 
+    /**
+     * 通过id查询
+     * @param id    ObjectID
+     * @param className 类名
+     * @param collectionName    集合名
+     * @return  日志
+     */
     @Override
     public LogInfo findById(Object id,Class className,String collectionName){
         return (LogInfo) mongoTemplate.findById(id,className,collectionName);
@@ -163,7 +169,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     @Override
     public List<LogInfo> findAllByQuery(Query query,Class className){
 
-        List<Object> res = new ArrayList<>(mongoTemplate.find(query, className, ALL_LOGS));
+        List<Object> res = new ArrayList<Object>(mongoTemplate.find(query, className, ALL_LOGS));
         return res.stream().filter(Objects::nonNull).map(s -> (LogInfo)s).toList();
     }
 
@@ -188,7 +194,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
     @Override
     public List<LogInfo> findAll(Class className){
 
-        List<Object> res = new ArrayList<>(mongoTemplate.findAll(className, ALL_LOGS));
+        List<Object> res = new ArrayList<Object>(mongoTemplate.findAll(className, ALL_LOGS));
         return res.stream().filter(Objects::nonNull).map(s -> (LogInfo)s).collect(Collectors.toList());
     }
 
@@ -196,10 +202,10 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
 
     /**
      * 在单个集合中查找单个字段
-     * @param field
-     * @param className
-     * @param collectionName
-     * @return
+     * @param field 查询字段
+     * @param className 类名
+     * @param collectionName    集合名
+     * @return  日志集合
      */
     @Override
     public List<LogInfo> findOneField(String field,Class className,String collectionName){
@@ -210,9 +216,9 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
 
     /**
      * 在所有集合中查找单个字段
-     * @param field
-     * @param className
-     * @return
+     * @param field 字段名
+     * @param className 类名
+     * @return  日志集合
      */
     @Override
     public List<LogInfo> findOneField(String field,Class className){
@@ -265,7 +271,7 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
             Pattern pattern = Pattern.compile("^.*" + content + ".*$",Pattern.CASE_INSENSITIVE);
             query.addCriteria(Criteria.where(regexTag).regex(pattern));
         }
-        // 集合名(appid)
+        // appid为空，全局查询
         if (Strings.isBlank(collectionName)){
             collectionName = ALL_LOGS;
 
@@ -285,12 +291,13 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
         Query query = new Query();
         // userid 非空,按userid查找
         if(Strings.isNotBlank(userid)){
-            query.addCriteria(Criteria.where("userid").is(userid));
+            query.addCriteria(Criteria.where(USER_ID).is(userid));
         }
         // appid 为空,全局查找
         if (Strings.isBlank(collectionName)){
             collectionName = ALL_LOGS;
         }
+        // 模糊查询
         if (Strings.isNotBlank(regex)){
             Pattern pattern = Pattern.compile("^.*" + regex + ".*$",Pattern.CASE_INSENSITIVE);
             query.addCriteria(Criteria.where(REGEX_TAG).regex(pattern));
@@ -318,12 +325,12 @@ public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
      */
     public void clean(){
         // 清除三天前的日志信息
-        LocalDate localDate = LocalDate.now().minusDays(3);
+        LocalDate localDate = LocalDate.now().minusDays(EXPIRE_DAY);
         log.info("Clean starts at : " + localDate);
-        Date from = Date.from(localDate.atStartOfDay(ZoneOffset.ofHours(8)).toInstant());
+        Date from = Date.from(localDate.atStartOfDay(ZoneOffset.ofHours(ZONE_OFFSET)).toInstant());
         ObjectId objectId = new ObjectId(from);
 
-        Query query = Query.query(Criteria.where("_id").lt(objectId)).limit(10000);
+        Query query = Query.query(Criteria.where(CLEAN_TAG).lt(objectId)).limit(TIME_OUT);
 
         long now = System.currentTimeMillis();
 

@@ -1,46 +1,67 @@
 package com.cvte.logsystem;
 
-import com.cvte.logsystem.mongo.repositoryImpl.MongoRepositoryImpl;
-import com.cvte.logsystem.redis.repositoryImpl.RedisRepositoryImpl;
+import com.cvte.logsystem.domain.User;
+import com.cvte.logsystem.mysql.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootTest
 class UserTest {
-    @Autowired
-    private RedisRepositoryImpl redisRepositoryImpl;
 
     @Autowired
-    private MongoRepositoryImpl mongoRepository;
+    private UserMapper userMapper;
 
     @Test
-    void saveZSetTest1(){
-        //System.out.println(mongoRepository.getCollectionSize("allLogs"));
-        //System.out.println(redisRepositoryImpl.getZSetSize("aabb"));
-    }
+    void userLoginTest(){
 
-    @Test
-    void opsZSetTest1(){
-        System.out.println(redisRepositoryImpl.zsetHasKey("mySet", "user3"));
-        System.out.println(redisRepositoryImpl.zsetHasKey("mySet", "user2"));
-        //  删除过时数据
-        System.out.println(redisRepositoryImpl.removeZSetValueByScore("mySet",Long.MIN_VALUE,20));
-    }
+        User testUser = new User();
+        User u;
 
-    @Test
-    void opsZSetTest2(){
-        System.out.println(redisRepositoryImpl.setZSetValue("fPhlM37R", "user1",10));
-        System.out.println(redisRepositoryImpl.setZSetValue("fPhlM37R", "user4",20));
-        System.out.println(redisRepositoryImpl.setZSetValue("fPhlM37R", "user2",30));
-        System.out.println(redisRepositoryImpl.getZSet("fPhlM37R",0,-1));
-    }
+        // 1. 错误测试
+        // 1.1 错误用户名，正确密码
+        testUser.setUsername("admin111");
+        testUser.setPassword("admin111");
+        u = userMapper.findByName(testUser.getUsername());
+        if (u == null) {
+            System.out.println("Login test 1.1 passed!");
+        }else{
+            System.out.println("Login test 1.1 failed!");
+        }
 
-    @Test
-    void simpleTest(){
+        // 1.2 正确用户名，错误密码
+        testUser.setUsername("admin1");
+        testUser.setPassword("admin1");
+        u = userMapper.findByName(testUser.getUsername());
+        if (u != null && !BCrypt.checkpw(testUser.getPassword(), u.getPassword())) {
+            System.out.println("Login test 1.2 passed!");
+        }else{
+            System.out.println("Login test 1.2 failed!");
+        }
+
+        // 1.3 错误用户名，错误密码
+        testUser.setUsername("admin111");
+        testUser.setPassword("admin1");
+        u = userMapper.findByName(testUser.getUsername());
+        if (u == null) {
+            System.out.println("Login test 1.3 passed!");
+        }else{
+            System.out.println("Login test 1.3 failed!");
+        }
+
+
+        // 1.4 sql注入
+        testUser.setUsername("'admin or '1' = '1'");
+        testUser.setPassword(BCrypt.hashpw("'admin or '1' = '1'",BCrypt.gensalt()));
+        u = userMapper.findByName(testUser.getUsername());
+        if (u == null) {
+            System.out.println("Login test 1.4 passed!");
+        }else{
+            System.out.println("Login test 1.4 failed!");
+        }
+
     }
 
 }

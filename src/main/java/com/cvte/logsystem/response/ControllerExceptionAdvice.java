@@ -3,6 +3,7 @@ package com.cvte.logsystem.response;
 import com.cvte.logsystem.exception.AppInfoException;
 import com.cvte.logsystem.exception.AuthException;
 import com.cvte.logsystem.exception.LoginException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,7 +25,7 @@ public class ControllerExceptionAdvice extends BasicResponse {
      * @param e 错误异常
      * @return  返回结果
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
     protected Object methodArgNotValid(Exception e) {
         log.error(e.getMessage());
         return responseFail(ResultCode.VALIDATION_FAILED);
