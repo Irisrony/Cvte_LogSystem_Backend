@@ -4,16 +4,16 @@ import com.cvte.logsystem.response.ResultCode;
 import lombok.Data;
 
 @Data
-public class AppInfoException extends RuntimeException{
+public class AppCreateException extends RuntimeException{
     private String code;
     private String msg;
 
-    public AppInfoException(ResultCode code) {
+    public AppCreateException(ResultCode code) {
         this.code = code.getCode();
         this.msg = code.getMsg();
     }
 
-    public AppInfoException(ResultCode code,String msg) {
+    public AppCreateException(ResultCode code, String msg) {
         this.code = code.getCode();
         this.msg = msg == null ? code.getMsg() : msg;
     }
@@ -24,5 +24,10 @@ public class AppInfoException extends RuntimeException{
                 "code='" + code + '\'' +
                 ", msg='" + msg + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getMessage(){
+        return toString();
     }
 }

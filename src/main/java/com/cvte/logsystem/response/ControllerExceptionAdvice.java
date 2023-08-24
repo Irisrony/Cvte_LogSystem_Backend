@@ -1,6 +1,7 @@
 package com.cvte.logsystem.response;
 
-import com.cvte.logsystem.exception.AppInfoException;
+import com.cvte.logsystem.exception.AppCheckException;
+import com.cvte.logsystem.exception.AppCreateException;
 import com.cvte.logsystem.exception.AuthException;
 import com.cvte.logsystem.exception.LoginException;
 import jakarta.validation.ConstraintViolationException;
@@ -71,18 +72,29 @@ public class ControllerExceptionAdvice extends BasicResponse {
      */
     @ExceptionHandler(AuthException.class)
     protected Object authException(AuthException e) {
-        log.error(e.toString());
+        log.error(e.getMessage());
         return responseFail(ResultCode.UNAUTHORIZED);
     }
 
     /**
-     * appid生成失败
+     * appid不存在
      * @param e 错误异常
      * @return  返回结果
      */
-    @ExceptionHandler(AppInfoException.class)
-    protected Object appInfoException(AppInfoException e){
-        log.error(e.toString());
+    @ExceptionHandler(AppCheckException.class)
+    protected Object appInfoException(AppCheckException e){
+        log.error(e.getMessage());
+        return responseFail(ResultCode.APPID_NOT_EXIST);
+    }
+
+    /**
+     * appid申请失败
+     * @param e 错误异常
+     * @return  返回结果
+     */
+    @ExceptionHandler(AppCreateException.class)
+    protected Object appInfoException(AppCreateException e){
+        log.error(e.getMessage());
         return responseFail(ResultCode.APPID_CREATE_FAILED);
     }
 

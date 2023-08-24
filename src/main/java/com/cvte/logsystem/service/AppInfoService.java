@@ -1,17 +1,18 @@
 package com.cvte.logsystem.service;
 
+import com.cvte.logsystem.exception.AppCheckException;
 import com.cvte.logsystem.mongo.repositoryImpl.MongoRepositoryImpl;
 import com.cvte.logsystem.domain.AppInfo;
 import com.cvte.logsystem.domain.LogInfo;
 import com.cvte.logsystem.domain.UploadEntity;
-import com.cvte.logsystem.exception.AppInfoException;
+import com.cvte.logsystem.exception.AppCreateException;
 import com.cvte.logsystem.mysql.mapper.AppInfoMapper;
 import com.cvte.logsystem.response.ResultCode;
 import com.cvte.logsystem.utils.AppUtils;
 import com.cvte.logsystem.redis.repositoryImpl.RedisRepositoryImpl;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,13 +21,13 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class AppInfoService {
-    @Autowired
+    @Resource
     private AppInfoMapper appInfoMapper;
 
-    @Autowired
+    @Resource
     private RedisRepositoryImpl redisRepository;
 
-    @Autowired
+    @Resource
     private MongoRepositoryImpl mongoRepository;
 
     private final static String KEY = "userid";
@@ -40,7 +41,7 @@ public class AppInfoService {
         String appid = AppUtils.getAppid();
         if(Strings.isBlank(appid) || appid.length() != 8){
             log.error("Create appid for " + appName + "failed!");
-            throw new AppInfoException(ResultCode.APPID_CREATE_FAILED);
+            throw new AppCheckException(ResultCode.APPID_NOT_EXIST);
         }else if (appInfoMapper.addAppInfo(new AppInfo(appid,appName)) != 1){
             log.error("Add { " + appid + " : " + appName + " } to database failed!");
         }
@@ -59,7 +60,7 @@ public class AppInfoService {
         final String appid = uploadEntity.getAppid(),userid = uploadEntity.getUserid();
         if (!redisRepository.setHasKey("appid",appid)){
             log.warn("Appid : " + appid + " 不存在！");
-            throw new AppInfoException(ResultCode.APPID_NOT_EXIST);
+            throw new AppCreateException(ResultCode.APPID_NOT_EXIST);
         }else if (appInfoMapper.addUploadData(uploadEntity) != 1){
             log.error("Add " + uploadEntity + " to database failed!");
         }

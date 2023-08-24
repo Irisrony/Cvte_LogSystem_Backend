@@ -15,8 +15,6 @@ public class CorsConfig extends WebMvcConfigurationSupport {
     @Override
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**")
-                //.allowCredentials(true)
-                //.allowedOrigins("http://175.178.76.218")
                 .allowedOrigins("*")
                 .allowedHeaders("*")
                 .allowedMethods("*")

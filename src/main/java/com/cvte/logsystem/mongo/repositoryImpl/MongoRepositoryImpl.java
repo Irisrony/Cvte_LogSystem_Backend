@@ -5,6 +5,7 @@ import com.cvte.logsystem.mongo.repository.BasicMongoRepository;
 
 import com.cvte.logsystem.domain.LogInfo;
 import com.mongodb.client.result.DeleteResult;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.bson.types.ObjectId;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @Repository
 @Slf4j
 public class MongoRepositoryImpl implements BasicMongoRepository<LogInfo> {
-    @Autowired
+    @Resource
     private MongoTemplate mongoTemplate;
 
     private final static String ALL_LOGS = "allLogs";

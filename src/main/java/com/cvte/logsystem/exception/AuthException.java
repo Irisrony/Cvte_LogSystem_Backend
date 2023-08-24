@@ -28,9 +28,6 @@ public class AuthException extends RuntimeException {
 
     @Override
     public String getMessage(){
-        return "AuthException{" +
-                "code='" + code + '\'' +
-                ", msg='" + msg + '\'' +
-                '}';
+        return toString();
     }
 }
